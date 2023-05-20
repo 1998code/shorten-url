@@ -34,6 +34,15 @@ export default function Home() {
     })
   }
 
+  const randomBG = () => {
+    const bgList = [
+      "city.jpg",
+      "space.jpg",
+      "galaxy.jpg",
+    ]
+    return bgList[Math.floor(Math.random() * bgList.length)];
+  }
+
   useEffect(() => {
     // Autogrow textarea
     const textarea = document.getElementById('textarea')
@@ -41,23 +50,34 @@ export default function Home() {
       textarea.style.height = 'auto'
       textarea.style.height = textarea.scrollHeight + 'px'
     })
+
+    const interval = setInterval(() => {
+      // Fade in and out
+      document.getElementById("bg").classList.add("opacity-0");
+      setTimeout(() => {
+        document.getElementById("bg").classList.remove("opacity-0");
+      }, 1000);
+
+      document.getElementById("bg").src = randomBG();
+    }, 30000);
+    return () => clearInterval(interval);
   }, [])
   
   return (
     <main className="flex items-center justify-center h-screen">
-      <div className="relative z-10" role="dialog" aria-modal="true">
+      <div className="relative z-10">
         <div className="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-25 dark:bg-opacity-50 transition-opacity"></div>
 
         <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
 
-          <h1 className="text-center text-4xl font-bold">REDKV</h1>
-          <h2 className="text-center text-2xl font-medium text-gray-900 dark:text-gray-200">
-            New URL Shortener Solution - Powered by Vercel Storage.
-          </h2>
+          <div className="mx-auto max-w-2xl transform rounded-xl bg-white dark:bg-gray-900 p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
 
-          <div className="mt-6 mx-auto max-w-2xl transform rounded-xl bg-white dark:bg-gray-900 p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
+            <h1 className="text-center text-3xl font-bold mt-3">REDKV</h1>
+            <h2 className="text-center text-xl font-medium text-gray-900 dark:text-gray-200">
+              New URL Shortener Solution - Powered by Vercel Storage.
+            </h2>
 
-            <form id="form" onSubmit={handleSubmit}>
+            <form id="form" onSubmit={handleSubmit} class="mt-6 sm:px-8">
               {/* URL Input */}
               <div className="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 rounded-md">
                 <textarea id="textarea" name="urls" className="w-full border-0 caret-blue-500 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-red-500 placeholder:text-lg focus:ring-0 sm:text-sm focus:outline-none" rows="6" placeholder="You can input one or more URLs here. Each URL should be on a new line."></textarea>
@@ -104,6 +124,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <img id="bg" src={ randomBG() } className={`fixed top-0 w-full h-full z-[1] object-cover filter brightness-50 duration-1000 transition-all`} />
     </main>
   )
 }
