@@ -113,17 +113,31 @@ export default function Home() {
                 <table className="w-full mt-4">
                   <tbody>
                     {results.map((result, index) => (
-                      <tr key={index} className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-500">
+                      <tr key={index} className="text-blue-500 dark:text-blue-400">
                         <td className="text-left">
-                          <a href={`/${result.key}`} target="_blank" className="block">
+                          <a href={`/${result.key}`} target="_blank" className="block hover:text-blue-600 dark:hover:text-blue-500">
                             {result.url}
                           </a>
                         </td>
-                        <td className="text-right">
-                          <a href={`/${result.key}`} target="_blank" className="block text-sm">
+                        <td className="flex items-center justify-end gap-3 text-sm mt-1">
+                          {/* domain */}
+                          <div className="opacity-70 cursor-default">
+                            { window.location.origin }/
+                          </div>
+                          {/* Preview */}
+                          <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5">
                             {`${result.key}`}
                             <i className="fa fa-external-link-alt ml-1"></i>
                           </a>
+                          {/* Copy btn */}
+                          <button onClick={() => {
+                              navigator.clipboard.writeText(`${window.location.origin}/${result.key}`)
+                              alert('Copied to clipboard!')
+                            }}
+                            className="hover:text-blue-600 dark:hover:text-blue-500"
+                          >
+                            <i className="fa fa-copy"></i>
+                          </button>
                         </td>
                       </tr>
                     ))}
