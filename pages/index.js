@@ -72,11 +72,22 @@ export default function Home() {
 
           <div className="mx-auto max-w-2xl transform rounded-xl bg-white dark:bg-gray-900 p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
 
-            <h1 className="text-center text-3xl font-bold mt-3">REDKV</h1>
+            <div className="flex items-center justify-center gap-4 my-8">
+              <a href="https://github.com/1998code/shorten-url" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
+                <i className="fab fa-github fa-x"></i>
+              </a>
+              <a href="https://twitter.com/1998design" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
+                <i className="fab fa-twitter fa-x"></i>
+              </a>
+            </div>
+
+            {/* Headings */}
+            <h1 className="text-center text-3xl font-bold mt-3">Magic Teleport</h1>
             <h2 className="text-center text-xl font-medium text-gray-900 dark:text-gray-200">
               New URL Shortener Solution - Powered by Vercel Storage.
             </h2>
 
+            {/* Form */}
             <form id="form" onSubmit={handleSubmit} class="mt-6 sm:px-8">
               {/* URL Input */}
               <div className="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 rounded-md">
@@ -95,7 +106,7 @@ export default function Home() {
             </form>
 
             {/* Results */}
-            <div className="px-4 py-14 text-center sm:px-14">
+            <div className="px-4 py-12 text-center sm:px-12">
               <i className="fas fa-link text-3xl text-gray-400"></i>
               <div className="mt-4 text-lg text-gray-900 dark:text-gray-100">
                 {results.length > 0 ? 'Here are your shortened URLs:' : 'Your shortened URLs will appear here.'}
