@@ -88,7 +88,7 @@ export default function Home() {
             </h2>
 
             {/* Form */}
-            <form id="form" onSubmit={handleSubmit} class="mt-6 sm:px-8">
+            <form id="form" onSubmit={handleSubmit} className="mt-6 sm:px-8">
               {/* URL Input */}
               <div className="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 rounded-md">
                 <textarea id="textarea" name="urls" className="w-full border-0 caret-blue-500 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-red-500 placeholder:text-lg focus:ring-0 sm:text-sm focus:outline-none" rows="6" placeholder="You can input one or more URLs here. Each URL should be on a new line."></textarea>
