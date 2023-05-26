@@ -17,11 +17,15 @@ export default function Home() {
     const form = document.getElementById('form')
     const formData = new FormData(form)
     const urls = formData.get('urls')
+    const password = formData.get('password')
 
     // POST to /api/shorten
-    await fetch('/api/shorten', {
+    await fetch('/api/v1/shorten', {
       method: 'POST',
-      body: urls
+      body: JSON.stringify({
+        urls: urls,
+        password: password
+      })
     })
     .then(res => res.json())
     .then(data => {
@@ -30,6 +34,7 @@ export default function Home() {
     })
     .catch(err => {
       console.error(err)
+      alert('Something went wrong, please try again later.')
       setLoading(false)
     })
   }
@@ -90,13 +95,17 @@ export default function Home() {
             {/* Form */}
             <form id="form" onSubmit={handleSubmit} className="mt-6 sm:px-8">
               {/* URL Input */}
-              <div className="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 rounded-md">
-                <textarea id="textarea" name="urls" className="w-full border-0 caret-blue-500 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-red-500 placeholder:text-lg focus:ring-0 sm:text-sm focus:outline-none" rows="6" placeholder="You can input one or more URLs here. Each URL should be on a new line."></textarea>
+              <div className="bg-gray-100 dark:bg-gray-800 rounded-md">
+                <textarea id="textarea" name="urls" className="w-full p-4 border-0 caret-blue-500 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-red-500 placeholder:text-lg focus:ring-0 sm:text-sm focus:outline-none" rows="6" placeholder="You can input one or more URLs here. Each URL should be on a new line."></textarea>
+                <hr className="opacity-50" />
+                <input type="text" name="password" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Password (optional)" />
+                <hr className="opacity-50" />
+                <input type="text" name="ref" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (optional)" />
               </div>
               <div className="flex items-center justify-between gap-3 mt-4">
                 <button type="submit" className="w-full mt-4 px-4 py-2.5 rounded-md bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-lg font-medium focus:ring-0 sm:text-sm">
                   Submit
-                  <i className={`fas fa-circle-notch fa-spin ml-2 ${loading ? 'block' : '!hidden'}`}></i>
+                  <i className={`fa fa-${loading ? 'circle-notch fa-spin' : 'paper-plane'} ml-2`}></i>
                 </button>
                 <button type="reset" className="w-full mt-4 px-4 py-2.5 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm">
                   Reset
@@ -127,8 +136,9 @@ export default function Home() {
                           {/* Preview */}
                           <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5">
                             {`${result.key}`}
-                            <i className="fa fa-external-link-alt ml-1"></i>
+                            <i className="fa fa-external-link-alt ml-2.5"></i>
                           </a>
+                          /
                           {/* Copy btn */}
                           <button onClick={() => {
                               navigator.clipboard.writeText(`${window.location.origin}/${result.key}`)

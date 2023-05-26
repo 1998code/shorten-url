@@ -12,12 +12,28 @@ export async function middleware(req: NextRequest) {
   let endURL = await kv.get(path)
 
   if (endURL) {
+
     // if endURL missing http/https, add it
     if (!endURL.match(/^[a-zA-Z]+:\/\//)) {
       endURL = 'http://' + endURL
     }
     return NextResponse.redirect(new URL(endURL))
+
   } else {
+
+    // Search for a secure key
+    let allKeys = []
+    for await (const key of kv.scanIterator()) {
+      allKeys.push(key)
+    }
+    let secureKey = allKeys.find((key) => key.startsWith(path))
+    if (secureKey) {
+      return NextResponse.redirect(new URL(req.nextUrl.toString().replace('/' + path, '') + '/unlock?key=' + path.split('$')[0]))
+    }
+    else if (path.includes('$')) {
+      return NextResponse.redirect(new URL(req.nextUrl.toString().replace('/' + path, '') + '/unlock?key=' + path.split('$')[0] ))
+    }
+
     return NextResponse.next()
   }
 
