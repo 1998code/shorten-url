@@ -120,12 +120,13 @@ export default function Home() {
               <div className="mt-4 text-lg text-gray-900 dark:text-gray-100">
                 {results.length > 0 ? 'Here are your shortened URLs:' : 'Your shortened URLs will appear here.'}
                 <table className="w-full mt-4">
-                  <tbody>
+                  <tbody className="divide-y divide-gray-600 divide-opacity-50">
                     {results.map((result, index) => (
-                      <tr key={index} className="text-blue-500 dark:text-blue-400">
-                        <td className="text-left">
-                          <a href={`/${result.key}`} target="_blank" className="block hover:text-blue-600 dark:hover:text-blue-500">
-                            {result.url}
+                      <tr key={index} className="text-blue-500 dark:text-blue-400 w-full overflow-auto">
+                        <td className="text-left truncate max-w-[23vw]">
+                          <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500">
+                            <span className="hidden sm:inline">{result.url}</span>
+                            <span className="sm:hidden">{index}</span>
                           </a>
                         </td>
                         <td className="flex items-center justify-end gap-3 text-sm mt-1">
@@ -134,7 +135,7 @@ export default function Home() {
                             { window.location.origin }/
                           </div>
                           {/* Preview */}
-                          <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5">
+                          <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5 whitespace-nowrap">
                             {`${result.key}`}
                             <i className="fa fa-external-link-alt ml-2.5"></i>
                           </a>
