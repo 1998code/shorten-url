@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 
     // push the result to the array
     results.push({
-      key: key,
+      key: key.split("$")[0],
       url: url
     })
   }
