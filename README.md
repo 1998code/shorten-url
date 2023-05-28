@@ -6,6 +6,9 @@
 ## Tutorial
 https://medium.com/gitconnected/how-to-create-a-url-shorten-app-with-vercel-kv-4a908940d513
 
+## API Doc
+https://docs.1998.media/shortenurl-api/quick-start
+
 ## Structure
 ![diagram](https://raw.githubusercontent.com/1998code/shorten-url/main/diagram.svg)
 
