@@ -173,14 +173,14 @@ export default function Home() {
                       <tr key={index} className="text-blue-500 dark:text-blue-400 w-full overflow-auto">
                         <td className="text-left truncate max-w-[23vw]">
                           <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 flex items-center gap-1">
-                            <img src={'https://edge-apis.vercel.app/api/favicon?url=' + result.url} className="h-[18px]" />
-                            <span className="hidden sm:inline">{result.url}</span>
+                            <img src={'https://edge-apis.vercel.app/api/favicon?url=' + result.url.replaceAll('http://','').replaceAll('https://','')} className="h-[18px]" />
+                            <span className="hidden sm:inline">{result.url.replaceAll('http://','').replaceAll('https://','')}</span>
                           </a>
                         </td>
                         <td className="flex items-center justify-end gap-3 text-sm mt-1">
                           {/* domain */}
                           <div className="opacity-70 cursor-default">
-                            { customDomain() ?? window.location.origin }/
+                            { (customDomain() ?? window.location.origin).replaceAll('http://','').replaceAll('https://','') }/
                           </div>
                           {/* Preview */}
                           <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5 whitespace-nowrap">
@@ -190,9 +190,6 @@ export default function Home() {
                           /
                           {/* Copy btn */}
                           <button onClick={() => {
-                              // navigator.clipboard.writeText(`${customDomain() ?? window.location.origin}/${result.key}`)
-                              // after copied then pop alert
-                              // use then do not run same time
                               navigator.clipboard.writeText(`${customDomain() ?? window.location.origin}/${result.key}`).then(() => {
                                 alert('Copied to clipboard!')
                               })
