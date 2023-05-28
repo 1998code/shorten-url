@@ -147,14 +147,18 @@ export default function Home() {
                 <input type="text" name="ref" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (Coming Soon)" />
               </div>
               <div className="flex items-center justify-between gap-3 mt-4">
-                <button type="submit" className="w-full mt-4 px-4 py-2.5 rounded-md bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-lg font-medium focus:ring-0 sm:text-sm">
+                <button type="submit" className="w-full px-4 py-2.5 rounded-md bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
                   Submit
                   <i className={`fa fa-${loading ? 'circle-notch fa-spin' : 'paper-plane'} ml-2`}></i>
                 </button>
-                <button type="reset" className="w-full mt-4 px-4 py-2.5 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm">
+                <button type="reset" className="w-full px-4 py-2.5 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
                   Reset
                   <i className="fas fa-undo-alt ml-2"></i>
                 </button>
+                <a href="https://docs.1998.media/shortenurl-api/quick-start" target="_blank" className="w-full text-center px-4 py-2.5 rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
+                  API
+                  <i className="fa fa-book ml-2"></i>
+                </a>
               </div>
             </form>
 
