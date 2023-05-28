@@ -18,9 +18,40 @@ export default function Home() {
     const formData = new FormData(form)
     const urls = formData.get('urls')
     const password = formData.get('password')
+    const domain = formData.get('domain')
+    const ref = formData.get('ref')
+
+    // GET /api/v2/domain?add={domain}
+    if (domain !== "") {
+      await fetch(`/api/v2/domain?add=${domain}`)
+      .then(res => {
+        if (res.status === 403) {
+          alert('You are not authorized to add this domain.')
+        } else if (res.status === 409) {
+          alert('This domain/subdomain is already taken. Please remove it from your Vercel account and try again.')
+        } else if (res.status === 200) {
+          // check domain ip CNAME to cname.vercel-dns.com
+          fetch(`https://dns.google/resolve?name=${domain}&type=CNAME`)
+          .then(res => res.json())
+          .then(data => {
+            if ( (data.Answer && data.Answer[0].data === 'cname.vercel-dns.com.') || (data.Authority && data.Authority[0].name === 'vercel.app.') ) {
+            }
+            else {
+              alert('Domain/Subdomain added successfully. Please use CNAME and point to cname.vercel-dns.com.')
+            }
+          })
+        } else {
+          alert('Something went wrong, please try again later.')
+        }
+      })
+      .catch(err => {
+        console.error(err)
+        alert('Something went wrong, please try again later.')
+      })
+    }
 
     // POST to /api/shorten
-    await fetch('/api/v1/shorten', {
+    await fetch('/api/v2/shorten', {
       method: 'POST',
       body: JSON.stringify({
         urls: urls,
@@ -37,6 +68,17 @@ export default function Home() {
       alert('Something went wrong, please try again later.')
       setLoading(false)
     })
+  }
+
+  const customDomain = () => {
+    const form = document.getElementById('form')
+    const formData = new FormData(form)
+    const domain = formData.get('domain')
+    if (domain !== "") {
+      return domain
+    } else {
+      return null
+    }
   }
 
   const randomBG = () => {
@@ -89,7 +131,7 @@ export default function Home() {
             {/* Headings */}
             <h1 className="text-center text-3xl font-bold mt-3">Magic Teleport</h1>
             <h2 className="text-center text-xl font-medium text-gray-900 dark:text-gray-200">
-              New URL Shortener Solution - Powered by Vercel Storage.
+              An URL Shortener Solution.
             </h2>
 
             {/* Form */}
@@ -98,9 +140,11 @@ export default function Home() {
               <div className="bg-gray-100 dark:bg-gray-800 rounded-md">
                 <textarea id="textarea" name="urls" className="w-full p-4 border-0 caret-blue-500 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-red-500 placeholder:text-lg focus:ring-0 sm:text-sm focus:outline-none" rows="6" placeholder="You can input one or more URLs here. Each URL should be on a new line."></textarea>
                 <hr className="opacity-50" />
-                <input type="text" name="password" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Password (optional)" />
+                <input type="text" name="password" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Password (Optional)" />
                 <hr className="opacity-50" />
-                <input type="text" name="ref" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (optional)" />
+                <input type="text" name="domain" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Custom Domain (Free + Optional)" />
+                <hr className="opacity-50" />
+                <input type="text" name="ref" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (Coming Soon)" />
               </div>
               <div className="flex items-center justify-between gap-3 mt-4">
                 <button type="submit" className="w-full mt-4 px-4 py-2.5 rounded-md bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-lg font-medium focus:ring-0 sm:text-sm">
@@ -117,22 +161,22 @@ export default function Home() {
             {/* Results */}
             <div className="px-4 py-12 text-center sm:px-12">
               <i className="fas fa-link text-3xl text-gray-400"></i>
-              <div className="mt-4 text-lg text-gray-900 dark:text-gray-100">
+              <div className="mt-2 text-lg text-gray-900 dark:text-gray-100">
                 {results.length > 0 ? 'Here are your shortened URLs:' : 'Your shortened URLs will appear here.'}
                 <table className="w-full mt-4">
                   <tbody className="divide-y divide-gray-600 divide-opacity-50">
                     {results.map((result, index) => (
                       <tr key={index} className="text-blue-500 dark:text-blue-400 w-full overflow-auto">
                         <td className="text-left truncate max-w-[23vw]">
-                          <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500">
+                          <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 flex items-center gap-1">
+                            <img src={'https://edge-apis.vercel.app/api/favicon?url=' + result.url} className="h-[18px]" />
                             <span className="hidden sm:inline">{result.url}</span>
-                            <span className="sm:hidden">{index}</span>
                           </a>
                         </td>
                         <td className="flex items-center justify-end gap-3 text-sm mt-1">
                           {/* domain */}
                           <div className="opacity-70 cursor-default">
-                            { window.location.origin }/
+                            { customDomain() ?? window.location.origin }/
                           </div>
                           {/* Preview */}
                           <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5 whitespace-nowrap">
