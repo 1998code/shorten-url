@@ -21,9 +21,9 @@ export default function Home() {
     const domain = formData.get('domain')
     const ref = formData.get('ref')
 
-    // GET /api/v2/domain?add={domain}
+    // GET /api/{API Version}/domain?add={domain}
     if (domain !== "") {
-      await fetch(`/api/v2/domain?add=${domain}`)
+      await fetch(`/api/v3/domain?add=${domain}`)
       .then(res => {
         if (res.status === 403) {
           alert('You are not authorized to add this domain.')
@@ -50,8 +50,8 @@ export default function Home() {
       })
     }
 
-    // POST to /api/shorten
-    await fetch('/api/v2/shorten', {
+    // POST to /api/{API Version}/shorten
+    await fetch('/api/v3/shorten', {
       method: 'POST',
       body: JSON.stringify({
         urls: urls,
