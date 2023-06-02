@@ -70,6 +70,50 @@ export default function Home() {
     })
   }
 
+  // Download results as CSV
+  const downloadCSV = () => {
+    const csv = results.map(result => `${result.url},${window.location.origin}/${result.key}`).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.setAttribute('hidden', '')
+    a.setAttribute('href', url)
+    a.setAttribute('download', 'shortenurl.csv')
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+
+  // Download results as xlsx
+  const downloadXLSX = () => {
+    const xlsx = results.map(result => `${result.url},${window.location.origin}/${result.key}`).join('\n')
+    const blob = new Blob([xlsx], { type: 'text/xlsx' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.setAttribute('hidden', '')
+    a.setAttribute('href', url)
+    a.setAttribute('download', 'shortenurl.xlsx')
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+
+  // Download results as JSON
+  const downloadJSON = () => {
+    const json = JSON.stringify(results, null, 2)
+    const blob = new Blob([json], { type: 'text/json' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.setAttribute('hidden', '')
+    a.setAttribute('href', url)
+    a.setAttribute('download', 'shortenurl.json')
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+
+
+  // Get custom domain
   const customDomain = () => {
     const form = document.getElementById('form')
     const formData = new FormData(form)
@@ -167,7 +211,7 @@ export default function Home() {
               <i className="fas fa-link text-3xl text-gray-400"></i>
               <div className="mt-2 text-lg text-gray-900 dark:text-gray-100">
                 {results.length > 0 ? 'Here are your shortened URLs:' : 'Your shortened URLs will appear here.'}
-                <table className="w-full mt-4">
+                <table className="w-full my-4">
                   <tbody className="divide-y divide-gray-600 divide-opacity-50">
                     {results.map((result, index) => (
                       <tr key={index} className="text-blue-500 dark:text-blue-400 w-full overflow-auto">
@@ -203,6 +247,25 @@ export default function Home() {
                     ))}
                   </tbody>
                 </table>
+                {results.length > 0 && (
+                  <div className="flex items-center justify-between gap-3 mt-8">
+                    <b>Export:</b>
+                    <div className="flex gap-3">
+                      <button onClick={downloadCSV} className="px-4 py-2.5 rounded-md bg-sky-100 dark:bg-sky-800 hover:bg-sky-200 dark:hover:bg-sky-700 text-sky-900 dark:text-sky-100 text-sm font-medium focus:ring-0 sm:text-sm">
+                        CSV
+                        <i className="fas fa-download ml-2"></i>
+                      </button>
+                      <button onClick={downloadXLSX} className="px-4 py-2.5 rounded-md bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 text-green-900 dark:text-green-100 text-sm font-medium focus:ring-0 sm:text-sm">
+                        XLSX
+                        <i className="fas fa-download ml-2"></i>
+                      </button>
+                      <button onClick={downloadJSON} className="px-4 py-2.5 rounded-md bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-sm font-medium focus:ring-0 sm:text-sm">
+                        JSON
+                        <i className="fas fa-download ml-2"></i>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
