@@ -1,8 +1,11 @@
 import { kv } from "@vercel/kv"
+import { stringify } from "postcss"
 
 export default async function handler(req, res) {
-
-  const body = JSON.parse(req.body)
+  console.log(req.body)
+  // const body = req.body
+  // parse body if string
+  const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body
 
   // GET urls from POST body
   const urls = body.urls.trim()

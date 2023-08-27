@@ -216,7 +216,7 @@ export default function Home() {
                     {results.map((result, index) => (
                       <tr key={index} className="text-blue-500 dark:text-blue-400 w-full overflow-auto">
                         <td className="text-left truncate max-w-[23vw]">
-                          <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 flex items-center gap-1">
+                          <a href={`http://${result.url.replaceAll('http://','').replaceAll('https://','')}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 flex items-center gap-1">
                             <img src={'https://edge-apis.vercel.app/api/favicon?url=' + result.url.replaceAll('http://','').replaceAll('https://','')} className="h-[18px]" />
                             <span className="hidden sm:inline">{result.url.replaceAll('http://','').replaceAll('https://','')}</span>
                           </a>
@@ -251,15 +251,15 @@ export default function Home() {
                   <div className="flex items-center justify-between gap-3 mt-8">
                     <b>Export:</b>
                     <div className="flex gap-3">
-                      <button onClick={downloadCSV} className="px-4 py-2.5 rounded-md bg-sky-100 dark:bg-sky-800 hover:bg-sky-200 dark:hover:bg-sky-700 text-sky-900 dark:text-sky-100 text-sm font-medium focus:ring-0 sm:text-sm">
+                      <button onClick={downloadCSV} className="px-3 py-1 rounded-md bg-sky-100 dark:bg-sky-800 hover:bg-sky-200 dark:hover:bg-sky-700 text-sky-900 dark:text-sky-100 text-sm font-medium focus:ring-0 sm:text-sm">
                         CSV
                         <i className="fas fa-download ml-2"></i>
                       </button>
-                      <button onClick={downloadXLSX} className="px-4 py-2.5 rounded-md bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 text-green-900 dark:text-green-100 text-sm font-medium focus:ring-0 sm:text-sm">
+                      <button onClick={downloadXLSX} className="px-3 py-1 rounded-md bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 text-green-900 dark:text-green-100 text-sm font-medium focus:ring-0 sm:text-sm">
                         XLSX
                         <i className="fas fa-download ml-2"></i>
                       </button>
-                      <button onClick={downloadJSON} className="px-4 py-2.5 rounded-md bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-sm font-medium focus:ring-0 sm:text-sm">
+                      <button onClick={downloadJSON} className="px-3 py-1 rounded-md bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-sm font-medium focus:ring-0 sm:text-sm">
                         JSON
                         <i className="fas fa-download ml-2"></i>
                       </button>
