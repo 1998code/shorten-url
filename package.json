@@ -1,7 +1,7 @@
 {
   "name": "shorten-url",
-  "version": "3.1.1",
-  "private": true,
+  "version": "4.0.0",
+  "private": false,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
