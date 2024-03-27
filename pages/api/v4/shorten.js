@@ -21,26 +21,25 @@ export default async function handler(req, res) {
   for (const url of urlsArray) {
     if (url === '') continue
 
-    // radomly generate a key
+    // Randomly generate a key
     let key = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
 
-    // check if key already exists
+    //Check if the key already exists
     const checkKey = await kv.get(key)
 
-    // while check key
     while (checkKey) {
       key = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
     }
 
-    // if password is not null, set the password
+    // If a password is not null, set the password
     if (password !== "") {
       key = key + "$" + password
     }
 
-    // set the key
+    // Set the key
     await kv.set(key, url)
 
-    // push the result to the array
+    // Push the result to the array
     results.push({
       key: key.split("$")[0],
       url: url
