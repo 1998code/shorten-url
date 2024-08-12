@@ -1,6 +1,6 @@
 {
   "name": "shorten-url",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "private": false,
   "scripts": {
     "dev": "next dev",

@@ -23,7 +23,7 @@ export default function Home() {
 
     // GET /api/{API Version}/domain?add={domain}
     if (domain !== "") {
-      await fetch(`/api/v3/domain?add=${domain}`)
+      await fetch(`/api/v5/domain?add=${domain}`)
       .then(res => {
         if (res.status === 403) {
           alert('You are not authorized to add this domain.')
@@ -51,7 +51,7 @@ export default function Home() {
     }
 
     // POST to /api/{API Version}/shorten
-    await fetch('/api/v3/shorten', {
+    await fetch('/api/v5/shorten', {
       method: 'POST',
       body: JSON.stringify({
         urls: urls,
@@ -128,8 +128,8 @@ export default function Home() {
   const randomBG = () => {
     const bgList = [
       "city.jpg",
-      "space.jpg",
-      "galaxy.jpg",
+      "https://images.unsplash.com/photo-1720818897755-bbd343e08e19?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1721297014035-5fd86e65270f?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     ]
     return bgList[Math.floor(Math.random() * bgList.length)];
   }
@@ -158,53 +158,52 @@ export default function Home() {
     <main className="flex items-center justify-center h-screen">
       <div className="relative z-10">
         <div className="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-25 dark:bg-opacity-50 transition-opacity"></div>
-
         <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
-
-          <div className="mx-auto max-w-2xl transform rounded-xl bg-white dark:bg-gray-900 p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
-
-            <div className="flex items-center justify-center gap-4 my-8">
-              <a href="https://github.com/1998code/shorten-url" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
-                <i className="fab fa-github fa-x"></i>
-              </a>
-              <a href="https://twitter.com/1998design" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
-                <i className="fab fa-twitter fa-x"></i>
-              </a>
-            </div>
-
-            {/* Headings */}
-            <h1 className="text-center text-3xl font-bold mt-3">Magic Teleport</h1>
-            <h2 className="text-center text-xl font-medium text-gray-900 dark:text-gray-200">
-              An URL Shortener Solution.
-            </h2>
-
-            {/* Form */}
-            <form id="form" onSubmit={handleSubmit} className="mt-6 sm:px-8">
-              {/* URL Input */}
-              <div className="bg-gray-100 dark:bg-gray-800 rounded-md">
-                <textarea id="textarea" name="urls" className="w-full p-4 border-0 caret-blue-500 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-red-500 placeholder:text-lg focus:ring-0 sm:text-sm focus:outline-none" rows="6" placeholder="You can input one or more URLs here. Each URL should be on a new line."></textarea>
-                <hr className="opacity-50" />
-                <input type="text" name="password" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Password (Optional)" />
-                <hr className="opacity-50" />
-                <input type="text" name="domain" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Custom Domain (Free + Optional)" />
-                <hr className="opacity-50" />
-                <input type="text" name="ref" className="w-full p-4 rounded-md bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (Coming Soon)" />
-              </div>
-              <div className="flex items-center justify-between gap-3 mt-4">
-                <button type="submit" className="w-full px-4 py-2.5 rounded-md bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
-                  Submit
-                  <i className={`fa fa-${loading ? 'circle-notch fa-spin' : 'paper-plane'} ml-2`}></i>
-                </button>
-                <button type="reset" className="w-full px-4 py-2.5 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
-                  Reset
-                  <i className="fas fa-undo-alt ml-2"></i>
-                </button>
-                <a href="https://docs.1998.media/shortenurl-api/quick-start" target="_blank" className="w-full text-center px-4 py-2.5 rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
-                  API
-                  <i className="fa fa-book ml-2"></i>
+          <div className="mx-auto max-w-2xl min-w-[50vw] flex flex-col md:flex-row rounded-3xl bg-gradient-to-br from-white to-wite/50 dark:from-gray-900 dark:to-gray-900/50 backdrop-blur-lg p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all transform">
+            <div class="flex-1 md:pt-3 md:pb-8">
+              <div className="flex items-center justify-center gap-4 my-3">
+                <a href="https://github.com/1998code/shorten-url" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
+                  <i className="fab fa-github fa-x"></i>
+                </a>
+                <a href="https://twitter.com/1998design" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
+                  <i className="fab fa-twitter fa-x"></i>
                 </a>
               </div>
-            </form>
+
+              {/* Headings */}
+              <h1 className="text-center text-3xl font-bold mt-3">Magic Teleport</h1>
+              <h2 className="text-center text-xl font-medium text-gray-900 dark:text-gray-200">
+                An URL Shortener Solution.
+              </h2>
+
+              {/* Form */}
+              <form id="form" onSubmit={handleSubmit} className="mt-6 sm:px-8">
+                {/* URL Input */}
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-xl">
+                  <textarea id="textarea" name="urls" className="w-full p-4 border-0 caret-blue-500 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-red-500 placeholder:text-lg focus:ring-0 sm:text-sm focus:outline-none" rows="6" placeholder="Input one or more URLs here. Each URL should be on a new line."></textarea>
+                  <hr className="opacity-50" />
+                  <input type="text" name="password" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Password (Optional)" />
+                  <hr className="opacity-50" />
+                  <input type="text" name="domain" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Custom Domain (Optional)" />
+                  <hr className="opacity-50" />
+                  <input type="text" name="ref" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (Coming Soon)" />
+                </div>
+                <div className="flex items-center justify-between gap-3 mt-4">
+                  <button type="submit" className="w-full px-4 py-2.5 rounded-xl bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
+                    Submit
+                    <i className={`fa fa-${loading ? 'circle-notch fa-spin' : 'paper-plane'} ml-2`}></i>
+                  </button>
+                  <button type="reset" className="w-full px-4 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
+                    Reset
+                    <i className="fas fa-undo-alt ml-2"></i>
+                  </button>
+                  <a href="https://docs.1998.media/shortenurl-api/quick-start" target="_blank" className="w-full text-center px-4 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
+                    API
+                    <i className="fa fa-book ml-2"></i>
+                  </a>
+                </div>
+              </form>
+            </div>
 
             {/* Results */}
             <div className="px-4 py-12 text-center sm:px-12">
@@ -251,15 +250,15 @@ export default function Home() {
                   <div className="flex items-center justify-between gap-3 mt-8">
                     <b>Export:</b>
                     <div className="flex gap-3">
-                      <button onClick={downloadCSV} className="px-3 py-1 rounded-md bg-sky-100 dark:bg-sky-800 hover:bg-sky-200 dark:hover:bg-sky-700 text-sky-900 dark:text-sky-100 text-sm font-medium focus:ring-0 sm:text-sm">
+                      <button onClick={downloadCSV} className="px-3 py-1 rounded-xl bg-sky-100 dark:bg-sky-800 hover:bg-sky-200 dark:hover:bg-sky-700 text-sky-900 dark:text-sky-100 text-sm font-medium focus:ring-0 sm:text-sm">
                         CSV
                         <i className="fas fa-download ml-2"></i>
                       </button>
-                      <button onClick={downloadXLSX} className="px-3 py-1 rounded-md bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 text-green-900 dark:text-green-100 text-sm font-medium focus:ring-0 sm:text-sm">
+                      <button onClick={downloadXLSX} className="px-3 py-1 rounded-xl bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 text-green-900 dark:text-green-100 text-sm font-medium focus:ring-0 sm:text-sm">
                         XLSX
                         <i className="fas fa-download ml-2"></i>
                       </button>
-                      <button onClick={downloadJSON} className="px-3 py-1 rounded-md bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-sm font-medium focus:ring-0 sm:text-sm">
+                      <button onClick={downloadJSON} className="px-3 py-1 rounded-xl bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-sm font-medium focus:ring-0 sm:text-sm">
                         JSON
                         <i className="fas fa-download ml-2"></i>
                       </button>
@@ -268,11 +267,10 @@ export default function Home() {
                 )}
               </div>
             </div>
-
           </div>
         </div>
       </div>
-      <img id="bg" src={ randomBG() } className={`fixed top-0 w-full h-full z-[1] object-cover filter brightness-50 duration-1000 transition-all`} />
+      <img id="bg" src={ randomBG() } className={`fixed top-0 w-full h-full z-[1] object-cover filter brightness-85 duration-1000 transition-all`} />
     </main>
   )
 }
