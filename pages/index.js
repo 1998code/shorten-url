@@ -159,7 +159,7 @@ export default function Home() {
       <div className="relative z-10">
         <div className="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-25 dark:bg-opacity-50 transition-opacity"></div>
         <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
-          <div className="mx-auto max-w-3xl min-w-[50vw] flex flex-col md:flex-row rounded-3xl bg-gradient-to-br from-white to-wite/50 dark:from-gray-900 dark:to-gray-900/50 backdrop-blur-lg p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all transform">
+          <div className="mx-auto min-w-[50vw] max-w-3xl xl:max-w-4xl 2xl:max-w-5xl flex flex-col md:flex-row rounded-3xl bg-gradient-to-br from-white to-wite/50 dark:from-gray-900 dark:to-gray-900/50 backdrop-blur-lg p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all transform">
             <div className="flex-1 md:pt-3 md:pb-8">
               <div className="flex items-center justify-center gap-4 my-3">
                 <a href="https://github.com/1998code/shorten-url" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
@@ -188,14 +188,14 @@ export default function Home() {
                   {/* <hr className="opacity-50" />
                   <input type="text" name="ref" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (Coming Soon)" /> */}
                 </div>
-                <div className="flex items-center justify-between gap-3 mt-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
                   <button type="submit" className="w-full px-4 py-2.5 rounded-xl bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-sm md:text-lg font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
                     Submit
                     <i className={`fa fa-${loading ? 'circle-notch fa-spin' : 'paper-plane'} ml-2`}></i>
                   </button>
                   <button type="reset" className="w-full px-4 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
                     Reset
-                    <i className="fas fa-undo-alt ml-2"></i>
+                    <i className="fa fa-undo-alt ml-2"></i>
                   </button>
                   <a href="https://docs.1998.media/shortenurl-api/quick-start" target="_blank" className="w-full text-center px-4 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
                     API
@@ -206,25 +206,25 @@ export default function Home() {
             </div>
 
             {/* Results */}
-            <div className="px-4 py-12 text-center sm:px-12">
-              <i className="fas fa-link text-3xl text-gray-400"></i>
+            <div className="min-w-[30vw] px-4 py-12 text-center">
+              <i className="fa fa-link text-3xl text-gray-400"></i>
               <div className="mt-2 text-lg text-gray-900 dark:text-gray-100">
                 {results.length > 0 ? 'Here are your shortened URLs:' : 'Your shortened URLs will appear here.'}
                 <table className="w-full my-4">
                   <tbody className="divide-y divide-gray-600 divide-opacity-50">
                     {results.map((result, index) => (
                       <tr key={index} className="text-blue-500 dark:text-blue-400 w-full overflow-auto">
-                        <td className="text-left truncate max-w-[23vw]">
-                          <a href={`http://${result.url.replaceAll('http://','').replaceAll('https://','')}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 flex items-center gap-1">
+                        <td className="text-left pr-1">
+                          <a href={`http://${result.url.replaceAll('http://','').replaceAll('https://','')}`} target="_blank" className="hover:text-gray-600 dark:hover:text-gray-500 flex items-center gap-1">
                             <img src={'https://edge-apis.vercel.app/api/favicon?url=' + result.url.replaceAll('http://','').replaceAll('https://','')} className="h-[18px]" />
-                            <span className="hidden sm:inline">{result.url.replaceAll('http://','').replaceAll('https://','')}</span>
+                            <span className="truncate max-w-[100px]">{result.url.replaceAll('http://','').replaceAll('https://','')}</span>
                           </a>
                         </td>
                         <td className="flex items-center justify-end gap-3 text-sm mt-1">
                           {/* domain */}
-                          <div className="opacity-70 cursor-default">
+                          {/* <div className="opacity-70 cursor-default">
                             { (customDomain() ?? window.location.origin).replaceAll('http://','').replaceAll('https://','') }/
-                          </div>
+                          </div> */}
                           {/* Preview */}
                           <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5 whitespace-nowrap">
                             {`${result.key}`}
@@ -247,22 +247,19 @@ export default function Home() {
                   </tbody>
                 </table>
                 {results.length > 0 && (
-                  <div className="flex items-center justify-between gap-3 mt-8">
-                    <b>Export:</b>
-                    <div className="flex gap-3">
-                      <button onClick={downloadCSV} className="px-3 py-1 rounded-xl bg-sky-100 dark:bg-sky-800 hover:bg-sky-200 dark:hover:bg-sky-700 text-sky-900 dark:text-sky-100 text-sm font-medium focus:ring-0 sm:text-sm">
-                        CSV
-                        <i className="fas fa-download ml-2"></i>
-                      </button>
-                      <button onClick={downloadXLSX} className="px-3 py-1 rounded-xl bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 text-green-900 dark:text-green-100 text-sm font-medium focus:ring-0 sm:text-sm">
-                        XLSX
-                        <i className="fas fa-download ml-2"></i>
-                      </button>
-                      <button onClick={downloadJSON} className="px-3 py-1 rounded-xl bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-sm font-medium focus:ring-0 sm:text-sm">
-                        JSON
-                        <i className="fas fa-download ml-2"></i>
-                      </button>
-                    </div>
+                  <div className="flex flex-wrap items-center justify-between gap-1 mt-8">
+                    <button onClick={downloadCSV} className="flex-1 px-3 py-1 rounded-lg bg-sky-100 dark:bg-sky-800 hover:bg-sky-200 dark:hover:bg-sky-700 text-sky-900 dark:text-sky-100 text-sm font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
+                      CSV
+                      <i className="fa fa-circle-arrow-down ml-2"></i>
+                    </button>
+                    <button onClick={downloadXLSX} className="flex-1 px-3 py-1 rounded-lg bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 text-green-900 dark:text-green-100 text-sm font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
+                      XLSX
+                      <i className="fa fa-circle-arrow-down ml-2"></i>
+                    </button>
+                    <button onClick={downloadJSON} className="flex-1 px-3 py-1 rounded-lg bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 text-yellow-900 dark:text-yellow-100 text-sm font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
+                      JSON
+                      <i className="fa fa-circle-arrow-down ml-2"></i>
+                    </button>
                   </div>
                 )}
               </div>
