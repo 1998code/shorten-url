@@ -128,8 +128,8 @@ export default function Home() {
   const randomBG = () => {
     const bgList = [
       "city.jpg",
-      "https://images.unsplash.com/photo-1720818897755-bbd343e08e19?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1721297014035-5fd86e65270f?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "cityNight.jpeg",
+      "mountain.jpeg",
     ]
     return bgList[Math.floor(Math.random() * bgList.length)];
   }
@@ -159,8 +159,8 @@ export default function Home() {
       <div className="relative z-10">
         <div className="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-25 dark:bg-opacity-50 transition-opacity"></div>
         <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
-          <div className="mx-auto max-w-2xl min-w-[50vw] flex flex-col md:flex-row rounded-3xl bg-gradient-to-br from-white to-wite/50 dark:from-gray-900 dark:to-gray-900/50 backdrop-blur-lg p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all transform">
-            <div class="flex-1 md:pt-3 md:pb-8">
+          <div className="mx-auto max-w-3xl min-w-[50vw] flex flex-col md:flex-row rounded-3xl bg-gradient-to-br from-white to-wite/50 dark:from-gray-900 dark:to-gray-900/50 backdrop-blur-lg p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all transform">
+            <div className="flex-1 md:pt-3 md:pb-8">
               <div className="flex items-center justify-center gap-4 my-3">
                 <a href="https://github.com/1998code/shorten-url" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
                   <i className="fab fa-github fa-x"></i>
@@ -184,20 +184,20 @@ export default function Home() {
                   <hr className="opacity-50" />
                   <input type="text" name="password" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Password (Optional)" />
                   <hr className="opacity-50" />
-                  <input type="text" name="domain" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Custom Domain (Optional)" />
-                  <hr className="opacity-50" />
-                  <input type="text" name="ref" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (Coming Soon)" />
+                  <input type="text" name="domain" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Custom Domain (Free & Optional)" />
+                  {/* <hr className="opacity-50" />
+                  <input type="text" name="ref" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (Coming Soon)" /> */}
                 </div>
                 <div className="flex items-center justify-between gap-3 mt-4">
-                  <button type="submit" className="w-full px-4 py-2.5 rounded-xl bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
+                  <button type="submit" className="w-full px-4 py-2.5 rounded-xl bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-sm md:text-lg font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
                     Submit
                     <i className={`fa fa-${loading ? 'circle-notch fa-spin' : 'paper-plane'} ml-2`}></i>
                   </button>
-                  <button type="reset" className="w-full px-4 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
+                  <button type="reset" className="w-full px-4 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
                     Reset
                     <i className="fas fa-undo-alt ml-2"></i>
                   </button>
-                  <a href="https://docs.1998.media/shortenurl-api/quick-start" target="_blank" className="w-full text-center px-4 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm">
+                  <a href="https://docs.1998.media/shortenurl-api/quick-start" target="_blank" className="w-full text-center px-4 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm md:text-lg font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
                     API
                     <i className="fa fa-book ml-2"></i>
                   </a>
