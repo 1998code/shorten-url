@@ -10,6 +10,7 @@ https://medium.com/gitconnected/how-to-create-a-url-shorten-app-with-vercel-kv-4
 
 ## API Doc
 https://1998code.gitbook.io/shortenurl-api/quick-start
+
 <img width="915" alt="Screenshot 2024-08-27 at 12 09 44 AM" src="https://github.com/user-attachments/assets/3ff9aae1-cadc-47d3-aad3-7a6fa1090556">
 
 ## Structure
