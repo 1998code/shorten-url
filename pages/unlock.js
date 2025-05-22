@@ -6,9 +6,9 @@ export default function Unlock() {
 
   const randomBG = () => {
     const bgList = [
-      "city.jpg",
-      "space.jpg",
-      "galaxy.jpg",
+      "img/city.jpg",
+      "img/cityNight.jpeg",
+      "img/mountain.jpeg",
     ]
     return bgList[Math.floor(Math.random() * bgList.length)];
   }
