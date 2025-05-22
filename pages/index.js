@@ -23,7 +23,7 @@ export default function Home() {
 
     // GET /api/{API Version}/domain?add={domain}
     if (domain !== "") {
-      await fetch(`/api/v5/domain?add=${domain}`)
+      await fetch(`/api/v6/domain?add=${domain}`)
       .then(res => {
         if (res.status === 403) {
           alert('You are not authorized to add this domain.')
@@ -51,7 +51,7 @@ export default function Home() {
     }
 
     // POST to /api/{API Version}/shorten
-    await fetch('/api/v5/shorten', {
+    await fetch('/api/v6/shorten', {
       method: 'POST',
       body: JSON.stringify({
         urls: urls,
@@ -127,9 +127,9 @@ export default function Home() {
 
   const randomBG = () => {
     const bgList = [
-      "city.jpg",
-      "cityNight.jpeg",
-      "mountain.jpeg",
+      "img/city.jpg",
+      "img/cityNight.jpeg",
+      "img/mountain.jpeg",
     ]
     return bgList[Math.floor(Math.random() * bgList.length)];
   }
@@ -267,7 +267,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <img id="bg" src={ randomBG() } className={`fixed top-0 w-full h-full z-[1] object-cover filter brightness-85 duration-1000 transition-all`} />
+      <img id="bg" src={ randomBG() }  loading="lazy" alt="Background"
+        className={`fixed top-0 w-full h-full z-[1] object-cover filter brightness-85 duration-1000 transition-all`} />
     </main>
   )
 }

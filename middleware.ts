@@ -6,8 +6,12 @@ export const config = {
 }
 
 export async function middleware(req: NextRequest) {
-
   const path = req.nextUrl.pathname.replace('/', '')
+  
+  // Skip processing for API paths and index page
+  if (path.startsWith('api/') || path.startsWith('img/') || path === '' || path.startsWith('_next/static/')) {
+    return NextResponse.next()
+  }
 
   let endURL = await kv.get(path)
 
@@ -40,5 +44,4 @@ export async function middleware(req: NextRequest) {
   } else {
     return NextResponse.next()
   }
-
 }
