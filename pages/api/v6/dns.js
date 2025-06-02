@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   }
 
   // IP string start with 76.76.21.
-  const validIP = ip.startsWith('76.76.21.') || ip === '216.198.79.193' || ip === '64.29.17.193';
+  const validIP = ip.startsWith('76.76.21.') || ip.startsWith('216.198.79.') || ip.startsWith('64.29.17.');
 
   if (validIP) {
     res.status(200).send('Setup Completed');
