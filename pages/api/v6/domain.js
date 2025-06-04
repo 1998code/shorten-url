@@ -19,6 +19,9 @@ export default async function handler(req, res) {
     if (data.error) {
       const { projectName, teamName, ...cleanedData } = data.error
       data = cleanedData
+    } else {
+      const { projectId, ...cleanedData } = data
+      data = cleanedData
     }
     
     return res.status(response.status).json(data)
