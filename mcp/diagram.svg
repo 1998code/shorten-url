@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <defs>
+    <style>
+      .box { fill:#111827; stroke:#374151; stroke-width:2; rx:8; ry:8; }
+      .title { font: 600 16px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#f3f4f6; }
+      .subtitle { font: 400 13px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#9ca3af; }
+      .arrow { stroke:#60a5fa; stroke-width:2; marker-end:url(#arrowhead); fill:none; }
+      .badge { fill:#1f2937; stroke:#60a5fa; stroke-width:1; rx:6; ry:6; }
+      .badgeText { font: 600 12px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#bfdbfe; }
+      .caption { font: 500 12px Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#93c5fd; }
+      .bg { fill:#0f172a; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa" />
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="800" height="800" />
+
+  <!-- Header -->
+  <text x="30" y="40" class="title">Shorten URL – MCP Integration Diagram</text>
+  <text x="30" y="62" class="subtitle">Diagram of how the MCP server interacts with the existing Next.js API</text>
+
+  <!-- MCP Client -->
+  <rect class="box" x="250" y="110" width="300" height="90" />
+  <text x="270" y="145" class="title">MCP Client</text>
+  <text x="270" y="170" class="subtitle">AI / Editor / Agent</text>
+
+  <!-- MCP Server -->
+  <rect class="box" x="220" y="240" width="360" height="110" />
+  <text x="240" y="275" class="title">MCP Server (mcp/src/server.ts)</text>
+  <text x="240" y="300" class="subtitle">Tools: shorten_url, get_count, add_domain, check_dns</text>
+  <rect class="badge" x="240" y="310" width="150" height="24" />
+  <text x="248" y="327" class="badgeText">SHORTEN_URL_BASE</text>
+
+  <!-- Next.js API -->
+  <rect class="box" x="250" y="390" width="300" height="130" />
+  <text x="270" y="420" class="title">ShortenURL API (v6)</text>
+  <text x="270" y="445" class="subtitle">/api/v6/shorten (POST)</text>
+  <text x="270" y="465" class="subtitle">/api/v6/count (GET)</text>
+  <text x="270" y="485" class="subtitle">/api/v6/domain?add= (GET)</text>
+  <text x="270" y="505" class="subtitle">/api/v6/dns?domain= (GET)</text>
+
+  <!-- Backend services (same row) -->
+  <rect class="box" x="60" y="630" width="210" height="70" />
+  <text x="80" y="660" class="title">Upstash Redis</text>
+  <text x="80" y="682" class="subtitle">Key storage for short links</text>
+
+  <rect class="box" x="295" y="630" width="210" height="70" />
+  <text x="315" y="660" class="title">Vercel Domains API</text>
+  <text x="315" y="682" class="subtitle">Domain add via credentials</text>
+
+  <rect class="box" x="530" y="630" width="210" height="70" />
+  <text x="550" y="660" class="title">Public DNS</text>
+  <text x="550" y="682" class="subtitle">A record check</text>
+
+  <!-- Arrows: Client -> MCP Server -> Next.js API -->
+  <path class="arrow" d="M400 200 L400 240" />
+  <text x="410" y="220" class="caption">MCP tools</text>
+
+  <path class="arrow" d="M400 350 L400 390" />
+  <text x="410" y="370" class="caption">HTTP</text>
+
+  <!-- Arrows from API to services (fan-out) -->
+  <path class="arrow" d="M400 520 L400 590 L165 590 L165 630" />
+  <text x="185" y="585" class="caption">Shorten / Count</text>
+
+  <path class="arrow" d="M400 520 L400 630" />
+  <text x="410" y="605" class="caption">Domain</text>
+
+  <path class="arrow" d="M400 520 L400 590 L635 590 L635 630" />
+  <text x="555" y="585" class="caption">DNS</text>
+
+  <!-- Footer note -->
+  <text x="30" y="770" class="subtitle">Set SHORTEN_URL_BASE to point MCP to your running Next.js app (default http://localhost:3000).</text>
+</svg>
+

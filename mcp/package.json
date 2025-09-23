@@ -1,0 +1,21 @@
+{
+  "name": "shorten-url-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.3"
+  }
+}
+

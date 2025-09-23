@@ -1,0 +1,48 @@
+{
+  "name": "Shorten URL MCP Server",
+  "version": "6.1.0",
+  "schema": 1,
+  "description": "MCP server exposing tools for shorten-url app APIs",
+  "tools": [
+    {
+      "name": "shorten_url",
+      "description": "Shorten one or multiple URLs. Optionally include a password to protect.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "urls": { "type": "string", "description": "One or many URLs separated by newline or comma" },
+          "password": { "type": "string", "description": "Optional password to lock link", "default": "" }
+        },
+        "required": ["urls"]
+      }
+    },
+    {
+      "name": "get_count",
+      "description": "Get total number of stored short links (approx).",
+      "input_schema": { "type": "object", "properties": {}, "additionalProperties": false }
+    },
+    {
+      "name": "add_domain",
+      "description": "Add a domain to the Vercel project via API.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "domain": { "type": "string", "description": "Domain to add (e.g. example.com)" }
+        },
+        "required": ["domain"]
+      }
+    },
+    {
+      "name": "check_dns",
+      "description": "Check if a domain's A record points to the expected IP ranges.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "domain": { "type": "string", "description": "Domain to check (e.g. example.com)" }
+        },
+        "required": ["domain"]
+      }
+    }
+  ]
+}
+
