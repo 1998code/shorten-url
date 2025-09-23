@@ -5,7 +5,7 @@ import { z } from "zod";
 
 // Configure base URL of the running Next.js app.
 // Default assumes dev server on http://localhost:3000
-const BASE_URL = process.env.SHORTEN_URL_BASE || "http://localhost:3000";
+const BASE_URL = process.env.SHORTEN_URL_BASE || "https://shareby.vercel.app";
 
 const shortenSchema = z.object({
   urls: z.string().min(1, "urls is required"),
@@ -91,7 +91,15 @@ async function main() {
           body: JSON.stringify({ urls: input.urls, password: input.password ?? "" })
         });
         const data = await res.json();
-        return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+        
+        // Construct the full shortened URLs using BASE_URL
+        const shortenedUrls = data.map((item: any) => ({
+          key: item.key,
+          url: item.url,
+          shortUrl: `${BASE_URL}${item.key}`
+        }));
+        
+        return { content: [{ type: "text", text: JSON.stringify(shortenedUrls, null, 2) }] };
       }
 
       case "get_count": {
