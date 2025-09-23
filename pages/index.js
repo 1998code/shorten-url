@@ -185,8 +185,6 @@ export default function Home() {
                   <input type="text" name="password" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Password (Optional)" />
                   <hr className="opacity-50" />
                   <input type="text" name="domain" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Custom Domain (Free & Optional)" />
-                  {/* <hr className="opacity-50" />
-                  <input type="text" name="ref" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Reference (Coming Soon)" /> */}
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
                   <button type="submit" className="w-full px-4 py-2.5 rounded-xl bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-sm md:text-lg font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
