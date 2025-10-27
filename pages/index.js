@@ -194,8 +194,8 @@ export default function Home() {
                 <a href="https://github.com/1998code/shorten-url" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
                   <i className="fab fa-github fa-x"></i>
                 </a>
-                <a href="https://twitter.com/1998design" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
-                  <i className="fab fa-twitter fa-x"></i>
+                <a href="https://x.com/1998design" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
+                  <i className="fab fa-x-twitter"></i>
                 </a>
               </div>
 
