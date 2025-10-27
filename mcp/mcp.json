@@ -1,6 +1,6 @@
 {
   "name": "Shorten URL MCP Server",
-  "version": "6.2.0",
+  "version": "6.3.0",
   "schema": 1,
   "description": "MCP server exposing tools for shorten-url app APIs",
   "tools": [

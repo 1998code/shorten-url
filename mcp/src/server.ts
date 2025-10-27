@@ -24,7 +24,7 @@ async function main() {
   const transport = new StdioServerTransport();
   const server = new Server({
     name: "shorten-url-mcp",
-    version: "6.2.0",
+    version: "6.3.0",
   }, {
     capabilities: {
       tools: {}

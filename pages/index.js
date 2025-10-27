@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import QRCode from 'qrcode'
 
 export default function Home() {
 
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
+  const [qrDialog, setQrDialog] = useState({ isOpen: false, url: '', qrCode: '' })
 
   // Handle form submit
   const handleSubmit = async () => {
@@ -125,6 +127,33 @@ export default function Home() {
     }
   }
 
+  // Generate QR code and open dialog
+  const generateQRCode = async (url) => {
+    try {
+      const qrCodeDataURL = await QRCode.toDataURL(url, {
+        width: 256,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      })
+      setQrDialog({
+        isOpen: true,
+        url: url,
+        qrCode: qrCodeDataURL
+      })
+    } catch (error) {
+      console.error('Error generating QR code:', error)
+      alert('Error generating QR code')
+    }
+  }
+
+  // Close QR dialog
+  const closeQRDialog = () => {
+    setQrDialog({ isOpen: false, url: '', qrCode: '' })
+  }
+
   const randomBG = () => {
     const bgList = [
       "img/city.jpg",
@@ -159,7 +188,7 @@ export default function Home() {
       <div className="relative z-10">
         <div className="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-25 dark:bg-opacity-50 transition-opacity"></div>
         <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
-          <div className="mx-auto min-w-[50vw] max-w-3xl xl:max-w-4xl 2xl:max-w-5xl flex flex-col md:flex-row rounded-3xl bg-gradient-to-br from-white to-wite/50 dark:from-gray-900 dark:to-gray-900/50 backdrop-blur-lg p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all transform">
+          <div className="mx-auto min-w-[50vw] xl:max-w-4xl 2xl:max-w-5xl flex flex-col lg:flex-row rounded-3xl bg-gradient-to-br from-white to-wite/50 dark:from-gray-900 dark:to-gray-900/50 backdrop-blur-lg p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all transform">
             <div className="flex-1 md:pt-3 md:pb-8">
               <div className="flex items-center justify-center gap-4 my-3">
                 <a href="https://github.com/1998code/shorten-url" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
@@ -205,7 +234,7 @@ export default function Home() {
 
             {/* Results */}
             <div className="min-w-[30vw] px-4 py-12 text-center">
-              <i className="fa fa-link text-3xl text-gray-400"></i>
+              <i className="fa fa-link text-3xl text-gray-600 dark:text-gray-400"></i>
               <div className="mt-2 text-lg text-gray-900 dark:text-gray-100">
                 {results.length > 0 ? 'Here are your shortened URLs:' : 'Your shortened URLs will appear here.'}
                 <table className="w-full my-4">
@@ -228,7 +257,7 @@ export default function Home() {
                             {`${result.key}`}
                             <i className="fa fa-external-link-alt ml-2.5"></i>
                           </a>
-                          /
+                          |
                           {/* Copy btn */}
                           <button onClick={() => {
                               navigator.clipboard.writeText(`${customDomain() ?? window.location.origin}/${result.key}`).then(() => {
@@ -237,7 +266,18 @@ export default function Home() {
                             }}
                             className="hover:text-blue-600 dark:hover:text-blue-500"
                           >
-                            <i className="fa fa-copy"></i>
+                            <i className="far fa-copy"></i>
+                          </button>
+                          |
+                          {/* QR btn */}
+                          <button onClick={() => {
+                              const fullUrl = `${customDomain() ?? window.location.origin}/${result.key}`
+                              generateQRCode(fullUrl)
+                            }}
+                            className="hover:text-blue-600 dark:hover:text-blue-500"
+                            title="Generate QR Code"
+                          >
+                            <i className="fa fa-qrcode"></i>
                           </button>
                         </td>
                       </tr>
@@ -267,6 +307,67 @@ export default function Home() {
       </div>
       <img id="bg" src={ randomBG() }  loading="lazy" alt="Background"
         className={`fixed top-0 w-full h-full z-[1] object-cover filter brightness-85 duration-1000 transition-all`} />
+
+      {/* QR Code Dialog */}
+      {qrDialog.isOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+            {/* Background overlay */}
+            <div 
+              className="fixed inset-0 backdrop-blur-lg transition-opacity duration-300 ease-in-out"
+              onClick={closeQRDialog}
+            ></div>
+
+            {/* Dialog panel */}
+            <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-3xl text-left overflow-hidden shadow-xl transform transition-all duration-300 ease-in-out sm:my-8 sm:align-middle sm:max-w-sm sm:w-full animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-4">
+              <div className="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 sm:mx-0 sm:h-10 sm:w-10">
+                    <i className="fa fa-qrcode text-blue-600 dark:text-blue-400"></i>
+                  </div>
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
+                      QR Code
+                    </h3>
+                    <div className="mt-1">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 break-all">
+                        {qrDialog.url}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                 <img 
+                   src={qrDialog.qrCode} 
+                   alt="QR Code" 
+                   className="w-full border border-gray-300 dark:border-gray-600 rounded-3xl transition-all duration-500 ease-in-out transform hover:scale-105"
+                 />
+              </div>
+              <div className="mb-3 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button
+                    type="button"
+                    className="w-full inline-flex justify-center items-center gap-1 rounded-xl border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+                    onClick={closeQRDialog}
+                  >
+                    <i className="far fa-times"></i>
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    className="mt-3 w-full inline-flex justify-center items-center gap-1 rounded-xl border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+                    onClick={() => {
+                      navigator.clipboard.writeText(qrDialog.url).then(() => {
+                        alert('URL copied to clipboard!')
+                      })
+                    }}
+                  >
+                    <i className="far fa-copy"></i>
+                    Copy URL
+                  </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
