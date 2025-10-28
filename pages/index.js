@@ -6,6 +6,7 @@ export default function Home() {
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
   const [qrDialog, setQrDialog] = useState({ isOpen: false, url: '', qrCode: '' })
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   // Handle form submit
   const handleSubmit = async () => {
@@ -154,6 +155,14 @@ export default function Home() {
     setQrDialog({ isOpen: false, url: '', qrCode: '' })
   }
 
+  // Toggle theme
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode
+    setIsDarkMode(newTheme)
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light')
+    document.documentElement.classList.toggle('dark', newTheme)
+  }
+
   const randomBG = () => {
     const bgList = [
       "img/city.jpg",
@@ -164,6 +173,14 @@ export default function Home() {
   }
 
   useEffect(() => {
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme')
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark)
+    
+    setIsDarkMode(shouldBeDark)
+    document.documentElement.classList.toggle('dark', shouldBeDark)
+
     // Autogrow textarea
     const textarea = document.getElementById('textarea')
     textarea.addEventListener('input', () => {
@@ -197,10 +214,17 @@ export default function Home() {
                 <a href="https://x.com/1998design" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
                   <i className="fab fa-x-twitter"></i>
                 </a>
+                <button 
+                  onClick={toggleTheme}
+                  className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500 transition-colors duration-200"
+                  title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  <i className={`fa fa-${isDarkMode ? 'sun' : 'moon'}`}></i>
+                </button>
               </div>
 
               {/* Headings */}
-              <h1 className="text-center text-3xl font-bold mt-3">Magic Teleport</h1>
+              <h1 className="text-center text-3xl font-bold mt-3 text-black dark:text-white">Magic Teleport</h1>
               <h2 className="text-center text-xl font-medium text-gray-900 dark:text-gray-200">
                 An URL Shortener Solution.
               </h2>
