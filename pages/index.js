@@ -7,6 +7,18 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [qrDialog, setQrDialog] = useState({ isOpen: false, url: '', qrCode: '' })
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [containerWidth, setContainerWidth] = useState(null)
+  const [containerHeight, setContainerHeight] = useState(null)
+  const [isResizing, setIsResizing] = useState(false)
+
+  // Random hero image for empty state based on theme
+  const getRandomEmptyBg = (darkMode) => {
+    const lightImages = ["img/cloud_light.jpg", "img/wall_light.jpg", "img/color_light.jpg"]
+    const darkImages = ["img/city_dark.jpg", "img/cityNight_dark.jpeg"]
+    const images = darkMode ? darkImages : lightImages
+    return images[Math.floor(Math.random() * images.length)]
+  }
+  const [emptyBg, setEmptyBg] = useState(getRandomEmptyBg(false))
 
   // Handle form submit
   const handleSubmit = async () => {
@@ -159,17 +171,38 @@ export default function Home() {
   const toggleTheme = () => {
     const newTheme = !isDarkMode
     setIsDarkMode(newTheme)
+    setEmptyBg(getRandomEmptyBg(newTheme))
     localStorage.setItem('theme', newTheme ? 'dark' : 'light')
     document.documentElement.classList.toggle('dark', newTheme)
   }
 
-  const randomBG = () => {
-    const bgList = [
-      "img/city.jpg",
-      "img/cityNight.jpeg",
-      "img/mountain.jpeg",
-    ]
-    return bgList[Math.floor(Math.random() * bgList.length)];
+  // Handle resize
+  const handleResize = (e) => {
+    e.preventDefault()
+    const startX = e.clientX
+    const startY = e.clientY
+    const containerEl = e.target.closest('.resizable-container')
+    const startWidth = containerWidth || containerEl.offsetWidth
+    const startHeight = containerHeight || containerEl.offsetHeight
+    setIsResizing(true)
+
+    const onMouseMove = (moveEvent) => {
+      const deltaX = moveEvent.clientX - startX
+      const deltaY = moveEvent.clientY - startY
+      const newWidth = Math.max(400, Math.min(window.innerWidth - 100, startWidth + deltaX * 2))
+      const newHeight = Math.max(300, startHeight + deltaY)
+      setContainerWidth(newWidth)
+      setContainerHeight(newHeight)
+    }
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', onMouseUp)
+      setIsResizing(false)
+    }
+
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onMouseUp)
   }
 
   useEffect(() => {
@@ -177,44 +210,72 @@ export default function Home() {
     const savedTheme = localStorage.getItem('theme')
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
     const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark)
-    
+
     setIsDarkMode(shouldBeDark)
+    setEmptyBg(getRandomEmptyBg(shouldBeDark))
     document.documentElement.classList.toggle('dark', shouldBeDark)
 
     // Autogrow textarea
     const textarea = document.getElementById('textarea')
-    textarea.addEventListener('input', () => {
+    const handleInput = () => {
       textarea.style.height = 'auto'
       textarea.style.height = textarea.scrollHeight + 'px'
-    })
+    }
 
-    const interval = setInterval(() => {
-      // Fade in and out
-      document.getElementById("bg").classList.add("opacity-0");
-      setTimeout(() => {
-        document.getElementById("bg").classList.remove("opacity-0");
-      }, 1000);
+    if (textarea) {
+      textarea.addEventListener('input', handleInput)
+    }
 
-      document.getElementById("bg").src = randomBG();
-    }, 30000);
-    return () => clearInterval(interval);
+    return () => {
+      if (textarea) {
+        textarea.removeEventListener('input', handleInput)
+      }
+    }
   }, [])
+
+  // Removed auto-height effect to avoid collapsing on init
   
   return (
-    <main className="flex items-center justify-center h-screen">
-      <div className="relative z-10">
-        <div className="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-25 dark:bg-opacity-50 transition-opacity"></div>
-        <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
-          <div className="mx-auto min-w-[50vw] xl:max-w-4xl 2xl:max-w-5xl flex flex-col lg:flex-row rounded-3xl bg-gradient-to-br from-white to-wite/50 dark:from-gray-900 dark:to-gray-900/50 backdrop-blur-lg p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all transform">
-            <div className="flex-1 md:pt-3 md:pb-8">
-              <div className="flex items-center justify-center gap-4 my-3">
+    <main className="flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-20 relative overflow-hidden" style={{ backgroundColor: isDarkMode ? '#15202b' : 'transparent' }}>
+      {
+        !isDarkMode && (
+          <div
+            className="absolute inset-0 -z-10"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.3)), url(${emptyBg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'blur(8px)',
+              transform: 'scale(1.05)'
+            }}
+          />
+        )
+      }
+      <div
+        className="resizable-container mx-auto min-w-[50vw] xl:max-w-4xl 2xl:max-w-5xl flex flex-col lg:flex-row items-stretch rounded-3xl bg-white dark:bg-gray-900 p-2 shadow-2xl ring-1 ring-gray-200 dark:ring-gray-800 transition-all transform relative min-h-[400px]"
+        style={{
+          ...(containerWidth ? { width: `${containerWidth}px`, maxWidth: 'none' } : {}),
+          ...(containerHeight ? { height: `${containerHeight}px`, minHeight: 'auto' } : {}),
+          overflow: 'auto'
+        }}
+      >
+        {/* Resize handle - bottom-right corner border */}
+        <div
+          onMouseDown={handleResize}
+          className={`absolute bottom-0 right-0 w-6 h-6 cursor-nwse-resize ${isResizing ? 'opacity-100' : 'opacity-50 hover:opacity-100'} transition-opacity z-50 group`}
+          title="Drag to resize"
+        >
+          <div className={`absolute bottom-0 right-0 w-full h-full ${isResizing ? 'border-b-4 border-r-4' : 'border-b-2 border-r-2'} group-hover:border-b-4 group-hover:border-r-4 border-gray-400 dark:border-gray-500 rounded-br-3xl transition-all`}></div>
+        </div>
+            <div className="flex-1 pb-3">
+              <div className="flex items-center justify-start gap-4 my-3 pl-3 pr-4">
                 <a href="https://github.com/1998code/shorten-url" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
                   <i className="fab fa-github fa-x"></i>
                 </a>
                 <a href="https://x.com/1998design" target="_blank" className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500">
                   <i className="fab fa-x-twitter"></i>
                 </a>
-                <button 
+                <button
                   onClick={toggleTheme}
                   className="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-500 transition-colors duration-200"
                   title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -224,20 +285,37 @@ export default function Home() {
               </div>
 
               {/* Headings */}
-              <h1 className="text-center text-3xl font-bold mt-3 text-black dark:text-white">Magic Teleport</h1>
-              <h2 className="text-center text-xl font-medium text-gray-900 dark:text-gray-200">
-                An URL Shortener Solution.
-              </h2>
+              <div className="mt-3 pl-3 pr-4">
+                <h1 className="text-3xl font-bold text-black dark:text-white">Magic Teleport</h1>
+                <h2 className="text-xl font-medium text-gray-900 dark:text-gray-200">
+                  An URL Shortener Solution.
+                </h2>
+              </div>
 
               {/* Form */}
-              <form id="form" onSubmit={handleSubmit} className="mt-6 sm:px-8">
+              <form id="form" onSubmit={handleSubmit} className="mt-6 sm:pl-3 sm:pr-4">
                 {/* URL Input */}
-                <div className="bg-gray-100 dark:bg-gray-800 rounded-xl">
-                  <textarea id="textarea" name="urls" className="w-full p-4 border-0 caret-blue-500 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-red-500 placeholder:text-lg focus:ring-0 sm:text-sm focus:outline-none" rows="6" placeholder="Input one or more URLs here. Each URL should be on a new line."></textarea>
-                  <hr className="opacity-50" />
-                  <input type="text" name="password" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Password (Optional)" />
-                  <hr className="opacity-50" />
-                  <input type="text" name="domain" className="w-full p-4 rounded-xl bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Custom Domain (Free & Optional)" />
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <i className="fa fa-link text-gray-400 dark:text-gray-500 mt-1"></i>
+                    <textarea id="textarea" name="urls" className="flex-1 border-0 bg-transparent caret-blue-500 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-red-500 placeholder:text-lg focus:ring-0 sm:text-sm focus:outline-none resize-y" rows="6" placeholder="Input one or more URLs here. Each URL should be on a new line."></textarea>
+                  </div>
+                </div>
+
+                {/* Password Input */}
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 mt-3">
+                  <div className="flex items-center gap-3">
+                    <i className="fa fa-lock text-gray-400 dark:text-gray-500"></i>
+                    <input type="text" name="password" className="flex-1 border-0 bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Password (Optional)" />
+                  </div>
+                </div>
+
+                {/* Custom Domain Input */}
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 mt-3">
+                  <div className="flex items-center gap-3">
+                    <i className="fa fa-globe text-gray-400 dark:text-gray-500"></i>
+                    <input type="text" name="domain" className="flex-1 border-0 bg-transparent text-gray-900 dark:text-gray-100 text-lg font-medium focus:ring-0 sm:text-sm focus:outline-none" placeholder="Custom Domain (Free & Optional)" />
+                  </div>
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
                   <button type="submit" className="w-full px-4 py-2.5 rounded-xl bg-blue-500 dark:bg-blue-900 hover:bg-blue-600 dark:hover:bg-blue-800 text-white text-sm md:text-lg font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
@@ -257,59 +335,85 @@ export default function Home() {
             </div>
 
             {/* Results */}
-            <div className="min-w-[30vw] px-4 py-12 text-center">
-              <i className="fa fa-link text-3xl text-gray-600 dark:text-gray-400"></i>
-              <div className="mt-2 text-lg text-gray-900 dark:text-gray-100">
-                {results.length > 0 ? 'Here are your shortened URLs:' : 'Your shortened URLs will appear here.'}
-                <table className="w-full my-4">
-                  <tbody className="divide-y divide-gray-600 divide-opacity-50">
-                    {results.map((result, index) => (
-                      <tr key={index} className="text-blue-500 dark:text-blue-400 w-full overflow-auto">
-                        <td className="text-left pr-1">
-                          <a href={`http://${result.url.replaceAll('http://','').replaceAll('https://','')}`} target="_blank" className="hover:text-gray-600 dark:hover:text-gray-500 flex items-center gap-1">
-                            <img src={'https://edge-apis.vercel.app/api/favicon?url=' + result.url.replaceAll('http://','').replaceAll('https://','')} className="h-[18px]" />
-                            <span className="truncate max-w-[100px]">{result.url.replaceAll('http://','').replaceAll('https://','')}</span>
-                          </a>
-                        </td>
-                        <td className="flex items-center justify-end gap-3 text-sm mt-1">
-                          {/* domain */}
-                          {/* <div className="opacity-70 cursor-default">
-                            { (customDomain() ?? window.location.origin).replaceAll('http://','').replaceAll('https://','') }/
-                          </div> */}
-                          {/* Preview */}
-                          <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5 whitespace-nowrap">
-                            {`${result.key}`}
-                            <i className="fa fa-external-link-alt ml-2.5"></i>
-                          </a>
-                          |
-                          {/* Copy btn */}
-                          <button onClick={() => {
-                              navigator.clipboard.writeText(`${customDomain() ?? window.location.origin}/${result.key}`).then(() => {
-                                alert('Copied to clipboard!')
-                              })
-                            }}
-                            className="hover:text-blue-600 dark:hover:text-blue-500"
-                          >
-                            <i className="far fa-copy"></i>
-                          </button>
-                          |
-                          {/* QR btn */}
-                          <button onClick={() => {
-                              const fullUrl = `${customDomain() ?? window.location.origin}/${result.key}`
-                              generateQRCode(fullUrl)
-                            }}
-                            className="hover:text-blue-600 dark:hover:text-blue-500"
-                            title="Generate QR Code"
-                          >
-                            <i className="fa fa-qrcode"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <div
+              className={`min-w-[30vw] px-4 py-4 flex flex-1 flex-col min-h-full ${results.length === 0 ? 'justify-center rounded-2xl relative overflow-hidden' : 'justify-start'}`}
+              style={results.length === 0 ? {
+                backgroundImage: isDarkMode
+                  ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${emptyBg})`
+                  : `linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.3)), url(${emptyBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              } : {}}
+            >
+              <div className={results.length > 0 ? '' : 'text-center relative z-10'}>
+                {results.length === 0 && (
+                  <div className="flex flex-col items-center justify-center">
+                    <i className={`fa fa-link text-3xl ${isDarkMode ? 'text-white' : 'text-gray-800'}`}></i>
+                    <div className={`mt-2 text-lg ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                      Your shortened URLs will appear here.
+                    </div>
+                  </div>
+                )}
                 {results.length > 0 && (
-                  <div className="flex flex-wrap items-center justify-between gap-1 mt-8">
+                  <>
+                    <div className="flex-1 overflow-auto">
+                      <div className="mb-6">
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                          Your shortened URLs
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {results.length} {results.length === 1 ? 'URL' : 'URLs'} ready to use
+                        </p>
+                      </div>
+                      <table className="w-full my-4">
+                        <tbody className="divide-y divide-gray-600 divide-opacity-50">
+                          {results.map((result, index) => (
+                        <tr key={index} className="text-blue-500 dark:text-blue-400 w-full overflow-auto">
+                          <td className="text-left pr-1">
+                            <a href={`http://${result.url.replaceAll('http://','').replaceAll('https://','')}`} target="_blank" className="hover:text-gray-600 dark:hover:text-gray-500 flex items-center gap-1">
+                              <img src={'https://edge-apis.vercel.app/api/favicon?url=' + result.url.replaceAll('http://','').replaceAll('https://','')} className="h-[18px]" />
+                              <span className="truncate max-w-[100px]">{result.url.replaceAll('http://','').replaceAll('https://','')}</span>
+                            </a>
+                          </td>
+                          <td className="flex items-center justify-end gap-3 text-sm mt-1">
+                            {/* domain */}
+                            {/* <div className="opacity-70 cursor-default">
+                              { (customDomain() ?? window.location.origin).replaceAll('http://','').replaceAll('https://','') }/
+                            </div> */}
+                            {/* Preview */}
+                            <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5 whitespace-nowrap">
+                              {`${result.key}`}
+                              <i className="fa fa-external-link-alt ml-2.5"></i>
+                            </a>
+                            |
+                            {/* Copy btn */}
+                            <button onClick={() => {
+                                navigator.clipboard.writeText(`${customDomain() ?? window.location.origin}/${result.key}`).then(() => {
+                                  alert('Copied to clipboard!')
+                                })
+                              }}
+                              className="hover:text-blue-600 dark:hover:text-blue-500"
+                            >
+                              <i className="far fa-copy"></i>
+                            </button>
+                            |
+                            {/* QR btn */}
+                            <button onClick={() => {
+                                const fullUrl = `${customDomain() ?? window.location.origin}/${result.key}`
+                                generateQRCode(fullUrl)
+                              }}
+                              className="hover:text-blue-600 dark:hover:text-blue-500"
+                              title="Generate QR Code"
+                            >
+                              <i className="fa fa-qrcode"></i>
+                            </button>
+                          </td>
+                        </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-between gap-1 mt-auto pt-4">
                     <button onClick={downloadCSV} className="flex-1 px-3 py-1 rounded-lg bg-sky-100 dark:bg-sky-800 hover:bg-sky-200 dark:hover:bg-sky-700 text-sky-900 dark:text-sky-100 text-sm font-medium focus:ring-0 sm:text-sm whitespace-nowrap">
                       CSV
                       <i className="fa fa-circle-arrow-down ml-2"></i>
@@ -322,23 +426,20 @@ export default function Home() {
                       JSON
                       <i className="fa fa-circle-arrow-down ml-2"></i>
                     </button>
-                  </div>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <img id="bg" src={ randomBG() }  loading="lazy" alt="Background"
-        className={`fixed top-0 w-full h-full z-[1] object-cover filter brightness-85 duration-1000 transition-all`} />
 
       {/* QR Code Dialog */}
       {qrDialog.isOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
             {/* Background overlay */}
-            <div 
-              className="fixed inset-0 backdrop-blur-lg transition-opacity duration-300 ease-in-out"
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out"
               onClick={closeQRDialog}
             ></div>
 

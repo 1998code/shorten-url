@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname.replace('/', '')
   
   // Skip middleware for system paths
-  if (path.startsWith('api/') || path.startsWith('img/') || path === '' || path.startsWith('_next/static/')) {
+  if (path.startsWith('api/') || path.startsWith('img/') || path === '' || path.startsWith('_next/static/') || path === 'admin') {
     return NextResponse.next()
   }
 
