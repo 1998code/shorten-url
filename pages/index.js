@@ -38,7 +38,7 @@ export default function Home() {
 
     // GET /api/{API Version}/domain?add={domain}
     if (domain !== "") {
-      await fetch(`/api/v6/domain?add=${domain}`)
+      await fetch(`/api/v26/domain?add=${domain}`)
       .then(res => {
         if (res.status === 403) {
           alert('You are not authorized to add this domain.')
@@ -66,7 +66,7 @@ export default function Home() {
     }
 
     // POST to /api/{API Version}/shorten
-    await fetch('/api/v6/shorten', {
+    await fetch('/api/v26/shorten', {
       method: 'POST',
       body: JSON.stringify({
         urls: urls,
@@ -85,9 +85,17 @@ export default function Home() {
     })
   }
 
+  // Get the full short URL for a result (handles Apple URLs)
+  const getShortUrl = (result) => {
+    if (result.shortUrl) {
+      return result.shortUrl
+    }
+    return `${customDomain() ?? window.location.origin}/${result.key}`
+  }
+
   // Download results as CSV
   const downloadCSV = () => {
-    const csv = results.map(result => `${result.url},${window.location.origin}/${result.key}`).join('\n')
+    const csv = results.map(result => `${result.url},${getShortUrl(result)}`).join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -101,7 +109,7 @@ export default function Home() {
 
   // Download results as xlsx
   const downloadXLSX = () => {
-    const xlsx = results.map(result => `${result.url},${window.location.origin}/${result.key}`).join('\n')
+    const xlsx = results.map(result => `${result.url},${getShortUrl(result)}`).join('\n')
     const blob = new Blob([xlsx], { type: 'text/xlsx' })
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -381,14 +389,14 @@ export default function Home() {
                               { (customDomain() ?? window.location.origin).replaceAll('http://','').replaceAll('https://','') }/
                             </div> */}
                             {/* Preview */}
-                            <a href={`/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5 whitespace-nowrap">
-                              {`${result.key}`}
+                            <a href={result.shortUrl || `/${result.key}`} target="_blank" className="hover:text-blue-600 dark:hover:text-blue-500 -ml-2.5 whitespace-nowrap">
+                              {result.shortUrl ? result.shortUrl.replace(/^https?:\/\//, '') : `${result.key}`}
                               <i className="fa fa-external-link-alt ml-2.5"></i>
                             </a>
                             |
                             {/* Copy btn */}
                             <button onClick={() => {
-                                navigator.clipboard.writeText(`${customDomain() ?? window.location.origin}/${result.key}`).then(() => {
+                                navigator.clipboard.writeText(getShortUrl(result)).then(() => {
                                   alert('Copied to clipboard!')
                                 })
                               }}
@@ -399,8 +407,7 @@ export default function Home() {
                             |
                             {/* QR btn */}
                             <button onClick={() => {
-                                const fullUrl = `${customDomain() ?? window.location.origin}/${result.key}`
-                                generateQRCode(fullUrl)
+                                generateQRCode(getShortUrl(result))
                               }}
                               className="hover:text-blue-600 dark:hover:text-blue-500"
                               title="Generate QR Code"

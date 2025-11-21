@@ -9,26 +9,26 @@ A standalone Model Context Protocol (MCP) server that exposes tools for the shor
 ## Tools
 - **shorten_url**: Shorten one or more URLs. Optional password protection.
   - Input: `{ urls: string, password?: string }`
-  - Calls: `POST /api/v6/shorten`
+  - Calls: `POST /api/v26/shorten`
   - Returns: Array of `{ key, url }`
 - **get_count**: Get total number of stored short links (cached for ~5m).
   - Input: `{}`
-  - Calls: `GET /api/v6/count`
+  - Calls: `GET /api/v26/count`
   - Returns: `{ count: number }`
 - **add_domain**: Add a domain to the Vercel project.
   - Input: `{ domain: string }`
-  - Calls: `GET /api/v6/domain?add=...`
+  - Calls: `GET /api/v26/domain?add=...`
   - Returns: JSON from the API (error cleaned)
 - **check_dns**: Verify domain A record points to expected IP ranges.
   - Input: `{ domain: string }`
-  - Calls: `GET /api/v6/dns?domain=...`
+  - Calls: `GET /api/v26/dns?domain=...`
   - Returns: Text result ("Setup Completed" or error)
 
 ## Configuration
 - **SHORTEN_URL_BASE**: Base URL of the running Next.js app. Default: `http://localhost:3000`.
 
 Your Next.js API already uses these env vars (MCP just forwards requests):
-- `PROJECT_ID_VERCEL`, `TEAM_ID_VERCEL`, `AUTH_BEARER_TOKEN` (used by `pages/api/v6/domain.js`).
+- `PROJECT_ID_VERCEL`, `TEAM_ID_VERCEL`, `AUTH_BEARER_TOKEN` (used by `pages/api/v26/domain.js`).
 
 ## Run
 - Dev: `npm run dev`

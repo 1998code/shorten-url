@@ -36,10 +36,10 @@
   <!-- Next.js API -->
   <rect class="box" x="250" y="390" width="300" height="130" />
   <text x="270" y="420" class="title">ShortenURL API (v6)</text>
-  <text x="270" y="445" class="subtitle">/api/v6/shorten (POST)</text>
-  <text x="270" y="465" class="subtitle">/api/v6/count (GET)</text>
-  <text x="270" y="485" class="subtitle">/api/v6/domain?add= (GET)</text>
-  <text x="270" y="505" class="subtitle">/api/v6/dns?domain= (GET)</text>
+  <text x="270" y="445" class="subtitle">/api/v26/shorten (POST)</text>
+  <text x="270" y="465" class="subtitle">/api/v26/count (GET)</text>
+  <text x="270" y="485" class="subtitle">/api/v26/domain?add= (GET)</text>
+  <text x="270" y="505" class="subtitle">/api/v26/dns?domain= (GET)</text>
 
   <!-- Backend services (same row) -->
   <rect class="box" x="60" y="630" width="210" height="70" />

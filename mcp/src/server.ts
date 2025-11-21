@@ -85,7 +85,7 @@ async function main() {
     switch (name) {
       case "shorten_url": {
         const input = shortenSchema.parse(args || {});
-        const res = await fetch(`${BASE_URL}/api/v6/shorten`, {
+        const res = await fetch(`${BASE_URL}/api/v26/shorten`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ urls: input.urls, password: input.password ?? "" })
@@ -103,14 +103,14 @@ async function main() {
       }
 
       case "get_count": {
-        const res = await fetch(`${BASE_URL}/api/v6/count`);
+        const res = await fetch(`${BASE_URL}/api/v26/count`);
         const data = await res.json();
         return { content: [{ type: "text", text: `Total URLs: ${data}` }] };
       }
 
       case "add_domain": {
         const input = addDomainSchema.parse(args || {});
-        const url = new URL(`${BASE_URL}/api/v6/domain`);
+        const url = new URL(`${BASE_URL}/api/v26/domain`);
         url.searchParams.set("add", input.domain);
         const res = await fetch(url);
         const data = await res.json();
@@ -119,7 +119,7 @@ async function main() {
 
       case "check_dns": {
         const input = checkDnsSchema.parse(args || {});
-        const url = new URL(`${BASE_URL}/api/v6/dns`);
+        const url = new URL(`${BASE_URL}/api/v26/dns`);
         url.searchParams.set("domain", input.domain);
         const res = await fetch(url);
         const text = await res.text();
