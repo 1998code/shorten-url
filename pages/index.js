@@ -574,13 +574,16 @@ export default function Home() {
           )}
         </div>
 
-        {/* Resize handle - bottom-right corner */}
+        {/* Resize handle - bottom-right corner.
+            Inset past the card's 28px corner radius, otherwise overflow-hidden clips it. */}
         <div
           onMouseDown={handleResize}
-          className={`absolute bottom-0 right-0 z-40 hidden h-6 w-6 cursor-nwse-resize lg:block ${isResizing ? 'opacity-100' : 'opacity-40 hover:opacity-100'} transition-opacity`}
+          className={`absolute bottom-0 right-0 z-40 hidden h-8 w-8 cursor-nwse-resize items-end justify-end p-[9px] lg:flex ${isResizing ? 'opacity-100' : 'opacity-40 hover:opacity-80'} transition-opacity`}
           title="Drag to resize"
         >
-          <div className={`absolute bottom-1 right-1 h-3.5 w-3.5 rounded-br-lg border-b-2 border-r-2 border-gray-400 dark:border-gray-500`}></div>
+          <svg viewBox="0 0 12 12" className="h-3 w-3 text-gray-500 dark:text-gray-400" fill="none" aria-hidden="true">
+            <path d="M11.25 4.75 4.75 11.25M11.25 8.75 8.75 11.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
         </div>
       </div>
 
