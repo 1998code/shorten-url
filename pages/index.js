@@ -619,16 +619,17 @@ export default function Home() {
               <div className="mt-5 border-t border-gray-200 pt-4 dark:border-white/10">
                 <p className={labelClass}>Export</p>
                 <div className="grid grid-cols-3 gap-2">
+                  {/* Per-format tints, kept off blue so they don't compete with the primary action */}
                   {[
-                    { label: 'CSV', onClick: downloadCSV },
-                    { label: 'XLSX', onClick: downloadXLSX },
-                    { label: 'JSON', onClick: downloadJSON },
-                  ].map(({ label, onClick }) => (
+                    { label: 'CSV', onClick: downloadCSV, tint: 'border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100 focus-visible:ring-violet-500 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300 dark:hover:bg-violet-500/20' },
+                    { label: 'XLSX', onClick: downloadXLSX, tint: 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 focus-visible:ring-emerald-500 dark:border-emerald-400/20 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20' },
+                    { label: 'JSON', onClick: downloadJSON, tint: 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 focus-visible:ring-amber-500 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-300 dark:hover:bg-amber-500/20' },
+                  ].map(({ label, onClick, tint }) => (
                     <button
                       key={label}
                       type="button"
                       onClick={onClick}
-                      className="flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-gray-200 dark:hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                      className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 ${tint}`}
                     >
                       {label}
                       <i className="fa fa-arrow-down-to-line text-xs opacity-60" aria-hidden="true"></i>
