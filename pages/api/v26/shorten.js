@@ -2,16 +2,16 @@ import { Redis } from "@upstash/redis"
 
 const redis = Redis.fromEnv();
 
-// Check if URL is an Apple App Store URL
-const isAppleAppStoreUrl = (url) => {
+// Apple hosts supported by Apple's shorten API (App Store, Apple Music incl. geo.music.apple.com)
+const APPLE_HOSTS = ['apps.apple.com', 'music.apple.com']
+
+// Check if URL is an Apple App Store or Apple Music URL
+const isAppleUrl = (url) => {
   if (!url || typeof url !== 'string') return false
   const normalizedUrl = url.trim()
-  if (normalizedUrl.includes('apps.apple.com')) {
-    return true
-  }
   try {
-    const urlObj = new URL(normalizedUrl.startsWith('http') ? normalizedUrl : `https://${normalizedUrl}`)
-    return urlObj.hostname === 'apps.apple.com' || urlObj.hostname.endsWith('.apps.apple.com')
+    const { hostname } = new URL(normalizedUrl.startsWith('http') ? normalizedUrl : `https://${normalizedUrl}`)
+    return APPLE_HOSTS.some(host => hostname === host || hostname.endsWith(`.${host}`))
   } catch {
     return false
   }
@@ -50,9 +50,9 @@ export default async function handler(req, res) {
   const promises = urlsArray.map(async (url) => {
     if (url === '') return null
 
-    // Check if this is an Apple App Store URL
-    if (isAppleAppStoreUrl(url)) {
-      // Use Apple's API for App Store URLs
+    // Check if this is an Apple App Store or Apple Music URL
+    if (isAppleUrl(url)) {
+      // Use Apple's API for App Store and Apple Music URLs
       const appleShortUrl = await shortenWithApple(url)
       
       if (appleShortUrl) {
