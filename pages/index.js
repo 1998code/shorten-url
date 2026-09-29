@@ -10,6 +10,10 @@ export default function Home() {
   const [containerWidth, setContainerWidth] = useState(null)
   const [containerHeight, setContainerHeight] = useState(null)
   const [isResizing, setIsResizing] = useState(false)
+  const [isResizeHover, setIsResizeHover] = useState(false)
+  const [leftWidth, setLeftWidth] = useState(null)
+  const [isDraggingDivider, setIsDraggingDivider] = useState(false)
+  const leftPaneRef = useRef(null)
   const [copiedKey, setCopiedKey] = useState(null)
   const [toast, setToast] = useState(null)
   const toastTimer = useRef(null)
@@ -247,6 +251,45 @@ export default function Home() {
     document.addEventListener('mouseup', onMouseUp)
   }
 
+  // Keep both panes usable while dragging the divider
+  const MIN_PANE_WIDTH = 320
+  const clampLeftWidth = (width) => {
+    const containerEl = leftPaneRef.current?.closest('.resizable-container')
+    const max = (containerEl?.offsetWidth ?? Infinity) - MIN_PANE_WIDTH
+    return Math.max(MIN_PANE_WIDTH, Math.min(max, width))
+  }
+
+  // Handle middle divider drag
+  const handleDividerDrag = (e) => {
+    e.preventDefault()
+    const startX = e.clientX
+    const startWidth = leftPaneRef.current.offsetWidth
+    setIsDraggingDivider(true)
+    document.body.style.cursor = 'col-resize'
+
+    const onMouseMove = (moveEvent) => {
+      setLeftWidth(clampLeftWidth(startWidth + moveEvent.clientX - startX))
+    }
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', onMouseUp)
+      document.body.style.cursor = ''
+      setIsDraggingDivider(false)
+    }
+
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onMouseUp)
+  }
+
+  // Arrow keys nudge the divider for keyboard users
+  const handleDividerKey = (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return
+    e.preventDefault()
+    const step = e.key === 'ArrowLeft' ? -16 : 16
+    setLeftWidth(clampLeftWidth(leftPaneRef.current.offsetWidth + step))
+  }
+
   useEffect(() => {
     // Initialize theme
     const savedTheme = localStorage.getItem('theme')
@@ -310,14 +353,18 @@ export default function Home() {
       />
 
       <div
-        className="resizable-container relative mx-auto flex w-full min-h-[440px] max-w-6xl lg:max-h-[calc(100dvh-8rem)] flex-col overflow-hidden rounded-[28px] border border-white/60 bg-white/85 shadow-card backdrop-blur-xl transition-shadow dark:border-white/10 dark:bg-[#0e131c]/90 dark:shadow-card-dark lg:flex-row"
+        className={`resizable-container relative mx-auto flex w-full min-h-[440px] max-w-6xl lg:max-h-[calc(100dvh-8rem)] flex-col overflow-hidden rounded-[28px] border border-white/60 bg-white/85 shadow-card outline outline-2 -outline-offset-1 backdrop-blur-xl transition-[box-shadow,outline-color] dark:border-white/10 dark:bg-[#0e131c]/90 dark:shadow-card-dark lg:flex-row ${isResizing ? 'outline-blue-500' : isResizeHover ? 'outline-blue-500/60' : 'outline-transparent'}`}
         style={{
           ...(containerWidth ? { width: `${containerWidth}px`, maxWidth: 'none' } : {}),
           ...(containerHeight ? { height: `${containerHeight}px`, minHeight: 'auto' } : {})
         }}
       >
         {/* Left: composer */}
-        <div className="scroll-slim flex flex-1 flex-col p-5 sm:p-7 lg:max-w-[440px] lg:overflow-y-auto">
+        <div
+          ref={leftPaneRef}
+          className={`scroll-slim flex flex-1 flex-col p-5 sm:p-7 lg:overflow-y-auto ${leftWidth ? 'lg:w-[var(--left-w)] lg:max-w-[calc(100%-320px)] lg:flex-none' : 'lg:max-w-[440px]'}`}
+          style={leftWidth ? { '--left-w': `${leftWidth}px` } : undefined}
+        >
           {/* Header */}
           <div className="flex items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-2.5">
@@ -417,7 +464,7 @@ export default function Home() {
                 <i className={`fa fa-${loading ? 'circle-notch fa-spin' : 'paper-plane'}`} aria-hidden="true"></i>
               </button>
 
-              <div className="mt-2.5 grid grid-cols-2 gap-2.5">
+              <div className="mt-4 grid grid-cols-2 gap-2.5">
                 <button
                   type="reset"
                   className="flex items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-gray-200 dark:hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
@@ -439,6 +486,23 @@ export default function Home() {
           </form>
         </div>
 
+        {/* Middle divider - drag to resize panes, double-click to reset */}
+        <div className="relative z-30 hidden lg:block">
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize panes"
+            tabIndex={0}
+            onMouseDown={handleDividerDrag}
+            onDoubleClick={() => setLeftWidth(null)}
+            onKeyDown={handleDividerKey}
+            title="Drag to resize, double-click to reset"
+            className="group absolute inset-y-0 -left-1.5 flex w-3 cursor-col-resize justify-center focus:outline-none"
+          >
+            <span className={`h-full w-0.5 transition-colors ${isDraggingDivider ? 'bg-blue-500' : 'bg-transparent group-hover:bg-blue-500/60 group-focus-visible:bg-blue-500'}`} />
+          </div>
+        </div>
+
         {/* Right: results */}
         <div className="scroll-slim flex flex-1 flex-col border-t border-gray-200/70 bg-gray-50/60 p-5 dark:border-white/10 dark:bg-white/[0.02] sm:p-7 lg:border-l lg:border-t-0 lg:overflow-y-auto">
           {results.length === 0 ? (
@@ -447,7 +511,9 @@ export default function Home() {
               style={{
                 backgroundImage: `url(${emptyBg})`,
                 backgroundSize: 'cover',
-                backgroundPosition: 'center'
+                backgroundPosition: 'center',
+                // Keep the photo out from under the translucent border, where the overlay doesn't reach
+                backgroundClip: 'padding-box'
               }}
             >
               <div className={`absolute inset-0 ${isDarkMode ? 'bg-black/55' : 'bg-white/35'} backdrop-blur-[1px]`} />
@@ -578,6 +644,8 @@ export default function Home() {
             Inset past the card's 28px corner radius, otherwise overflow-hidden clips it. */}
         <div
           onMouseDown={handleResize}
+          onMouseEnter={() => setIsResizeHover(true)}
+          onMouseLeave={() => setIsResizeHover(false)}
           className={`absolute bottom-0 right-0 z-40 hidden h-8 w-8 cursor-nwse-resize items-end justify-end p-[9px] lg:flex ${isResizing ? 'opacity-100' : 'opacity-40 hover:opacity-80'} transition-opacity`}
           title="Drag to resize"
         >
