@@ -353,7 +353,7 @@ export default function Home() {
       />
 
       <div
-        className={`resizable-container relative mx-auto flex w-full min-h-[440px] max-w-6xl lg:max-h-[calc(100dvh-8rem)] flex-col overflow-hidden rounded-[28px] border border-white/60 bg-white/85 shadow-card outline outline-2 -outline-offset-1 backdrop-blur-xl transition-[box-shadow,outline-color] dark:border-white/10 dark:bg-[#0e131c]/90 dark:shadow-card-dark lg:flex-row ${isResizing ? 'outline-blue-500' : isResizeHover ? 'outline-blue-500/60' : 'outline-transparent'}`}
+        className={`resizable-container relative mx-auto flex w-full min-h-[calc(100dvh-2rem)] sm:min-h-[calc(100dvh-3rem)] md:min-h-[calc(100dvh-6rem)] lg:min-h-[440px] max-w-6xl lg:max-h-[calc(100dvh-8rem)] flex-col overflow-hidden rounded-[28px] border border-white/60 bg-white/85 shadow-card outline outline-2 -outline-offset-1 backdrop-blur-xl transition-[box-shadow,outline-color] dark:border-white/10 dark:bg-[#0e131c]/90 dark:shadow-card-dark lg:flex-row ${isResizing ? 'outline-blue-500' : isResizeHover ? 'outline-blue-500/60' : 'outline-transparent'}`}
         style={{
           ...(containerWidth ? { width: `${containerWidth}px`, maxWidth: 'none' } : {}),
           ...(containerHeight ? { height: `${containerHeight}px`, minHeight: 'auto' } : {})
@@ -362,7 +362,7 @@ export default function Home() {
         {/* Left: composer */}
         <div
           ref={leftPaneRef}
-          className={`scroll-slim flex flex-1 flex-col p-5 sm:p-7 lg:overflow-y-auto ${leftWidth ? 'lg:w-[var(--left-w)] lg:max-w-[calc(100%-320px)] lg:flex-none' : 'lg:max-w-[440px]'}`}
+          className={`scroll-slim flex flex-none flex-col p-5 sm:p-7 lg:overflow-y-auto ${leftWidth ? 'lg:w-[var(--left-w)] lg:max-w-[calc(100%-320px)]' : 'lg:max-w-[440px] lg:flex-1'}`}
           style={leftWidth ? { '--left-w': `${leftWidth}px` } : undefined}
         >
           {/* Header */}
@@ -507,7 +507,7 @@ export default function Home() {
         <div className="scroll-slim flex flex-1 flex-col border-t border-gray-200/70 bg-gray-50/60 p-5 dark:border-white/10 dark:bg-white/[0.02] sm:p-7 lg:border-l lg:border-t-0 lg:overflow-y-auto">
           {results.length === 0 ? (
             <div
-              className="relative flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-gray-200/70 dark:border-white/10"
+              className="relative flex min-h-[280px] flex-1 items-center justify-center overflow-hidden rounded-2xl border border-gray-200/70 dark:border-white/10"
               style={{
                 backgroundImage: `url(${emptyBg})`,
                 backgroundSize: 'cover',
@@ -517,7 +517,7 @@ export default function Home() {
               }}
             >
               <div className={`absolute inset-0 ${isDarkMode ? 'bg-black/55' : 'bg-white/35'} backdrop-blur-[1px]`} />
-              <div className="animate-fade-in relative z-10 mx-4 max-w-[280px] rounded-2xl bg-white/70 px-6 py-8 text-center backdrop-blur-md dark:bg-black/50">
+              <div className="animate-fade-in relative z-10 m-4 max-w-[280px] rounded-2xl bg-white/70 px-6 py-8 text-center backdrop-blur-md dark:bg-black/50">
                 <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-gray-700 shadow-sm dark:bg-white/10 dark:text-white">
                   <i className="fa fa-link text-lg" aria-hidden="true"></i>
                 </span>
@@ -525,7 +525,7 @@ export default function Home() {
                   No links yet
                 </p>
                 <p className="mt-1.5 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                  Paste your URLs on the left and your short links will show up here.
+                  Paste your URLs <span className="lg:hidden">above</span><span className="hidden lg:inline">on the left</span> and your short links will show up here.
                 </p>
               </div>
             </div>
