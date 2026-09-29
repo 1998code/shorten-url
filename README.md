@@ -5,8 +5,8 @@
 
 ![Magic Teleport demo](https://raw.githubusercontent.com/1998code/shorten-url/main/public/media/Demo.gif)
 
-## Tutorial
-https://post.1998.media/how-to-create-a-url-shorten-app-with-vercel-kv > https://shareby.vercel.app/j7ipk2
+## Quick Tutorial
+[Medium](https://medium.com/gitconnected/how-to-create-a-url-shorten-app-with-vercel-kv-4a908940d513)
 
 ## Admin Panel (26 or above)
 <img width="1076" height="509" alt="Screenshot 2025-11-08 at 12 34 34 PM" src="https://github.com/user-attachments/assets/7a96d445-8318-4020-9168-18af201a0568" />
